@@ -15,8 +15,11 @@ WORKDIR /opt/app
 # Bundle app source
 ADD . /opt/app
 
-# default port
+# default ports
+# testing
 EXPOSE 8080
+# express
+EXPOSE 3000
 
 # basic npm start which will run node server.js to start the server
 CMD [ "npm", "start" ]
