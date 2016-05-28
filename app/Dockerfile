@@ -1,8 +1,22 @@
 # using https://hub.docker.com/_/node/
 FROM node:6.2.0-wheezy
 
-# default port - may need to update for non-testing
-EXPOSE 8888
+# use changes to package.json to force Docker not to use the cache
+# when we change our application's nodejs dependencies:
+ADD package.json /tmp/package.json
+RUN cd /tmp && npm install
 
-ADD package.json /usr/src/app/package.json
-RUN npm install
+# Create app directory
+RUN mkdir -p /opt/app && cp -a /tmp/node_modules /opt/app/
+
+# From here we load the application's code in, therefore the previous docker
+# "layer" thats been cached will be used if possible
+WORKDIR /opt/app
+# Bundle app source
+ADD . /opt/app
+
+# default port
+EXPOSE 8080
+
+# basic npm start which will run node server.js to start the server
+CMD [ "npm", "start" ]
