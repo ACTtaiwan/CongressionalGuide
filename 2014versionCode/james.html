@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+</head>
+<body>
+
+<div id="sponsoredBills"> </div>
+
+<script type="text/javascript">
+var apiKey = "[apikey]";
+var getBillsAPIUri = "http://congress.api.sunlightfoundation.com/bills";
+
+var bioguild_id = 'M001111'; // output of HW's work
+
+var TAIWAN_RELEVANT_BILLS = {
+	"hres494-113": {
+		name: "H.Res. 494: Affirming the importance of the Taiwan Relations Act",
+		link: "https://beta.congress.gov/bill/113th-congress/house-resolution/494"
+	},
+	"hres185-113": {
+		name: "H.Res. 185: Taiwan Travel Act",
+		link: "http://beta.congress.gov/bill/113th-congress/house-resolution/185"
+	},
+	"hres419-113": {
+		name: "H.R. 419: The Taiwan Policy Act",
+		link: "https://beta.congress.gov/bill/113th-congress/house-bill/419"
+	},
+	"hr1151-113": {
+		name: "H.R. 1151: To direct the Secretary of State to develop a strategy to obtain observer status for Taiwan at the triennial International Civil Aviation Organization Assembly, and for other purposes ",
+		link: "https://beta.congress.gov/bill/113th-congress/house-bill/1151"
+	},
+	"hconres55-113": {
+		name: "H.Con.Res. 55: Expressing the sense of Congress that Taiwan and its 23,000,000 people deserve membership in the United Nations",
+		link: "https://beta.congress.gov/bill/113th-congress/house-concurrent-resolution/55"
+	},
+	"hconres29-113": {
+		name: "H.Con.Res. 29: Expressing the sense of Congress that the United States should resume normal diplomatic relations with Taiwan, and for other purposes ",
+		link: "https://beta.congress.gov/bill/113th-congress/house-concurrent-resolution/29"
+	},
+	"hr3470-113": {
+		name: "H.R.3470 - To affirm the importance of the Taiwan Relations Act, to provide for the transfer of naval vessels to certain foreign countries, and for other purposes.",
+		link: "https://beta.congress.gov/bill/113th-congress/house-bill/3470"
+	},
+	"s12-113": {
+		name: "S. 12: Naval Vessel Transfer Act of 2013",
+		link: "https://beta.congress.gov/bill/113th-congress/senate-bill/12"
+	},
+	"s579-113": {
+		name: "S. 579: A bill to direct the Secretary of State to develop a strategy to obtain observer status for Taiwan at the triennial International Civil Aviation Organization Assembly, and for other purposes",
+		link: "http://beta.congress.gov/bill/113th-congress/senate-bill/579"
+	}
+};
+
+function makeLink(lable, link) {
+	return '<a href="' + link + '" target="_blank">' + lable + '</a>';
+}
+
+function displayTWBillsInDom(posibleBillIds, targetDomId) {
+	var $targetDom = $('#' + targetDomId);
+	var hadFoundBill = false;
+	posibleBillIds.forEach(function(id){
+		if (!!TAIWAN_RELEVANT_BILLS[id]) {
+			hadFoundBill = true;
+			$targetDom.append(makeLink(TAIWAN_RELEVANT_BILLS[id].name, TAIWAN_RELEVANT_BILLS[id].link));
+		}
+	});
+	if(!hadFoundBill) {
+		// NO sponsored bill id is relevant to Taiwan
+		$targetDom.append('NONE');
+	}
+}
+
+var sponsorIds = null;
+var cosponsorIds = null;
+
+function getBillIds($rawDataBills) {
+	return $rawDataBills.map(function(bill) {
+			return bill.bill_id;
+		});
+}
+
+function getCosponsoredBillIds(bioguild_id) {
+	return $.get(getBillsAPIUri, {
+		apikey: apiKey,
+		cosponsor_ids: bioguild_id
+	}).done(function(data) {
+		cosponsorIds = getBillIds(data.results);
+	});
+}
+
+function getSponsoredBillIds(bioguild_id) {
+	return $.get(getBillsAPIUri, {
+		apikey: apiKey,
+		sponsor_id: bioguild_id
+	}).done(function(data) {
+		sponsorIds = getBillIds(data.results);
+	});
+}
+
+function displayAllSponsoredBillIds(bioguild_id, targetDomId) {
+	$.when(getSponsoredBillIds(bioguild_id), getCosponsoredBillIds(bioguild_id)).done(function() {
+		displayTWBillsInDom(sponsorIds.concat(cosponsorIds), targetDomId);
+	});
+}
+
+
+
+// display all bills sonponsored/cosponsored by bioguild_id to target DOM id "sponsoredBills"
+displayAllSponsoredBillIds(bioguild_id, "sponsoredBills");
+
+
+
+</script>
+
+</body>
+</html> 
