@@ -2,10 +2,10 @@
   "name": "congressionalguide",
   "version": "1.0.0",
   "description": "Application Code for the Congressional Guide",
-  "main": "server.js",
+  "private": true,
   "scripts": {
-    "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./bin/www",
+    "test": "node server.js"
   },
   "author": "American Citizens for Taiwan",
   "license": "MIT",
@@ -14,7 +14,13 @@
     "url": "https://github.com/ACTtaiwan/CongressionalGuide"
   },
   "dependencies": {
-    "express": "^4.13.4",
+    "body-parser": "~1.13.2",
+    "cookie-parser": "~1.3.5",
+    "debug": "~2.2.0",
+    "express": "~4.13.1",
+    "jade": "~1.11.0",
+    "morgan": "~1.6.1",
+    "serve-favicon": "~2.3.0",
     "sqlite3": "^3.1.4"
   }
 }

@@ -8,3 +8,11 @@ The ACT U.S. Congressional Guide is an open-source project to provide organizati
 * Rather than a separate site, this is designed to be integrated with an existing website.
 
 To find out more, please check out the [Congressional Guide wiki](https://github.com/ACTtaiwan/CongressionalGuide/wiki/About-the-ACT-U.S.-Congressional-Guide).
+
+## Architecture Design
+* The [Express](http://expressjs.com) framework for [Node.js](https://nodejs.org/en/) is used for a foundation.
+* Storage: [SQLite](http://sqlite.org) - see [here](http://expressjs.com/en/guide/database-integration.html#sqlite) for SQLite Express DB intagration.
+* For [npm](https://www.npmjs.com) packages used, see the `app/package.json` file.
+
+## Getting Started
+To get a local environment up and running, start with the `app/README.md`
