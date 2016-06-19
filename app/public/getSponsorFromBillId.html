@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>jQuery.getJSON demo</title>
+  <style>
+  </style>
+  <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+</head>
+<body>
+ 
+<div id="images"></div>
+
+<script>
+
+var bill_id = "hres419-113"
+var congressAPI = "http://congress.api.sunlightfoundation.com/bills?bill_id=" + bill_id + "&apikey=[apikey]"
+
+$.getJSON (congressAPI, function(data) {
+	$.each(data.results, function(key, value) {
+		alert("Bill_id " + bill_id + " is ponsored by: " + this.sponsor_id);
+	});
+});
+</script>
+
+</body>
+</html>
