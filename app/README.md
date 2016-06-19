@@ -4,11 +4,11 @@ This Docker container is based on the [Official Node JS Docker container](https:
 `$ docker build -t acttaiwan/cgapp .`
 
 ## Run the Docker Container
-`$ docker run -it --rm -p 49160:8080 --name cgapp acttaiwan/cgapp`
+`$ docker run -it --rm -p 49160:3000 --name cgapp acttaiwan/cgapp`
 
 ### Local Directory
 If you are running locally where you are changing and working with the code, run the container via:
-`$ docker run -it --rm -p 49160:8080 -v "$PWD":/opt/app acttaiwan/cgapp /bin/bash`
+`$ docker run -it --rm -p 49160:3000 -v "$PWD":/opt/app acttaiwan/cgapp /bin/bash`
 
 * The -v option mounts the current directory you are in to the container, any changes made in this directory will immediately be available.
 * You will be dropped into the `/opt/app` directory where you can run commands. Changes that are then made to this directly will all change the directly locally.
