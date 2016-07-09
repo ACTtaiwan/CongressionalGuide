@@ -1,14 +1,10 @@
 
-body, p, div {font-family: "proxima-nova";}
-h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {font-family: "myriad-pro"; font-weight: 300;}
+/body, p, div {font-family: "proxima-nova", "Ariel", Sans-serif;}
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {font-family: "myriad-pro", "Ariel", Sans-serif; font-weight: 300;}
 
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
-
-#data-entry-wrapper {
-	background: url('../img/headerBackground.png');
-}
 
 #error-msg {
 	display: none;
@@ -19,7 +15,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {font-family: "myriad-pro";
 }
 
 .input-field {
-	margin: 15px;
+	margin: 15px 0;
 }
 
 .social-icon {
@@ -85,10 +81,6 @@ nav{}
 
 body > div.row{
 	margin-left: 0;margin-right:0;
-}
-
-div.row {
-	text-align: center;
 }
 
 h1{

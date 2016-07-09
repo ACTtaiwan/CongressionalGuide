@@ -263,10 +263,6 @@ $(function() {
     var $loadingIcon = $('#loading-icon');
     var errorMsg = $('#error-msg');
 
-    $('#clear-btn').click(function() {
-        $('.form-control').val('');
-    });
-
     $('#submit-btn').click(function() {
         $('#main').empty();
         $('.form-control').css('border', '1px solid #ccc');
