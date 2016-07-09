@@ -6,6 +6,12 @@ This Docker container is based on the [Official Node JS Docker container](https:
 ## Run the Docker Container
 `$ docker run -it --rm -p 49160:3000 --name cgapp acttaiwan/cgapp`
 
+This will drop you into the running container so you can observe the log. To quit the container, `control-c`.
+
+The `--rm` will remove the running container completely (not the image). If you want to just stop the container when you quit it, run it without the `--rm`.
+
+Access the running webpage at `http://localhost:49160/`
+
 ### Local Directory
 If you are running locally where you are changing and working with the code, run the container via:
 `$ docker run -it --rm -p 49160:3000 -v "$PWD":/opt/app acttaiwan/cgapp /bin/bash`
