@@ -1,8 +1,6 @@
 var CongressionalGuide = new Marionette.Application();
 CongressionalGuide.addRegions({
-    header : 'header',
-    main   : '#main',
-    footer : 'footer'
+    main   : '#main'
 });
 
 CongressionalGuide.navigate = function(route,  options){
