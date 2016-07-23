@@ -44,15 +44,13 @@ var TAIWAN_RELEVANT_BILLS = {
 
 Parse.initialize("PqNXb0zT1antU2yTXGg6EQltjjJAm2GUWqljxbtE", "3dbk6n78jFXe68CUHVPpJVOwVX2DX7UpfIuYL8oh");
 
-_.templateSettings.variable = "result";
-var congress_tpl = _.template($("#congress-tpl").html());
-var challenger_tpl = _.template($("#challenger-tpl").html());
+var candidate_tpl = _.template($("#candidate-tpl").html());
 
-function getLatitude(zip, address) {
-    var latitude = [];
+function getLocation(zip, address) {
+    var location = [];
     $.ajax('https://geoservices.tamu.edu/Services/Geocode/WebService/GeocoderWebServiceHttpNonParsed_V04_01.aspx', {
         data: {
-            apiKey: '[apikey]',
+            apiKey: 'b37c6aea99ad4425a7e5f90169dbdddb',
             version: '4.01',
             zip: zip,
             streetAddress: address
@@ -60,19 +58,19 @@ function getLatitude(zip, address) {
         async: false,
         success: function(data) {
             var dataArray = data.split(',');
-            latitude = [dataArray[3], dataArray[4]];
+            location = [dataArray[3], dataArray[4]];
         }
     });
-    return latitude;
+    return location;
 }
 
-function getDistrict(latitude) {
+function getDistrict(location) {
     var district = {};
     $.ajax('https://congress.api.sunlightfoundation.com/districts/locate', {
         data: {
             apikey: SUNLIGHT_APIKEY,
-            latitude: latitude[0],
-            longitude: latitude[1]
+            latitude: location[0],
+            longitude: location[1]
         },
         async: false,
         success: function(data) {
@@ -82,93 +80,117 @@ function getDistrict(latitude) {
     return district;
 }
 
-function getSenators(state) {
-    var senators = [];
-    $.ajax('https://congress.api.sunlightfoundation.com/legislators', {
-        data: {
-            apikey: SUNLIGHT_APIKEY,
-            state: state,
-            chamber: 'senate'
-        },
-        async: false,
-        success: function(data) {
-            senators = data.results;
-        }
-    });
-    return senators;
-}
+// function getSenators(state) {
+//     var senators = [];
+//     $.ajax('https://congress.api.sunlightfoundation.com/legislators', {
+//         data: {
+//             apikey: SUNLIGHT_APIKEY,
+//             state: state,
+//             chamber: 'senate'
+//         },
+//         async: false,
+//         success: function(data) {
+//             senators = data.results;
+//         }
+//     });
+//     return senators;
+// }
 
-function getReps(state, district) {
-    var reps = [];
-    var data = {};
-    if (district) {
-        data = {
-            apikey: SUNLIGHT_APIKEY,
-            state: state,
-            district: district,
-            chamber: 'house'
-        };
-    } else {
-        data = {
-            apikey: SUNLIGHT_APIKEY,
-            state: state,
-            chamber: 'house'
-        };
-    }
-    var reps = [];
-    $.ajax('https://congress.api.sunlightfoundation.com/legislators', {
-        data: data,
-        async: false,
-        success: function(data) {
-            reps = data.results;
-        }
-    });
-    return sortByDistrict(reps);
-}
+// function getReps(state, district) {
+//     var reps = [];
+//     var data = {};
+//     if (district) {
+//         data = {
+//             apikey: SUNLIGHT_APIKEY,
+//             state: state,
+//             district: district,
+//             chamber: 'house'
+//         };
+//     } else {
+//         data = {
+//             apikey: SUNLIGHT_APIKEY,
+//             state: state,
+//             chamber: 'house'
+//         };
+//     }
+//     var reps = [];
+//     $.ajax('https://congress.api.sunlightfoundation.com/legislators', {
+//         data: data,
+//         async: false,
+//         success: function(data) {
+//             reps = data.results;
+//         }
+//     });
+//     return sortByDistrict(reps);
+// }
+
+// function getSenatorCandidates(state) {
+//     var challengers = [];
+//     $.ajax('http://localhost:8080/candidates', {
+//     //$.ajax('https://api.parse.com/1/classes/Challenger', {
+//         type: 'GET',
+//         contentType: 'application/json',
+//         headers: {
+//             'X-Parse-Application-Id': 'PqNXb0zT1antU2yTXGg6EQltjjJAm2GUWqljxbtE',
+//             'X-Parse-REST-API-Key': '[apikey]'
+//         },
+//         data: {
+//             state: state,
+//             chamber: 'senate'
+//         },
+//         async: false,
+//         success: function(data) {
+//             challengers = data.results;
+//         }
+//     });
+//     return challengers;
+// }
+
+// function getRepCandidates(state, district) {
+//     var challengers = [];
+//     var query = {};
+//     query['state'] = state;
+//     query['chamber'] = 'house';
+//     if (district) {
+//         query['district'] = parseInt(district);
+//     }
+//     $.ajax('https://api.parse.com/1/classes/Challenger', {
+//         type: 'GET',
+//         contentType: 'application/json',
+//         headers: {
+//             'X-Parse-Application-Id': 'PqNXb0zT1antU2yTXGg6EQltjjJAm2GUWqljxbtE',
+//             'X-Parse-REST-API-Key': '[apikey]'
+//         },
+//         data: 'where=' + JSON.stringify(query),
+//         async: false,
+//         success: function(data) {
+//             challengers = data.results;
+//         }
+//     });
+//     return sortByDistrict(challengers);
+// }
 
 function getSenatorCandidates(state) {
-    var challengers = [];
-    $.ajax('https://api.parse.com/1/classes/Challenger', {
+    return $.ajax('/candidates', {
         type: 'GET',
         contentType: 'application/json',
-        headers: {
-            'X-Parse-Application-Id': 'PqNXb0zT1antU2yTXGg6EQltjjJAm2GUWqljxbtE',
-            'X-Parse-REST-API-Key': '[apikey]'
-        },
-        data: 'where=' + JSON.stringify({
-            state: state,
-            chamber: 'senate'
-        }),
-        async: false,
-        success: function(data) {
-            challengers = data.results;
+        data: {
+            chamber: 'S',
+            state: state
         }
     });
-    return challengers;
 }
 
 function getRepCandidates(state, district) {
-    var challengers = [];
-    var query = {};
-    query['state'] = state;
-    query['chamber'] = 'house';
-    if (district) {
-        query['district'] = parseInt(district);
-    }
-    $.ajax('https://api.parse.com/1/classes/Challenger', {
+    return $.ajax('/candidates', {
         type: 'GET',
         contentType: 'application/json',
-        headers: {
-            'X-Parse-Application-Id': 'PqNXb0zT1antU2yTXGg6EQltjjJAm2GUWqljxbtE',
-            'X-Parse-REST-API-Key': '[apikey]'
-        },
-        data: 'where=' + JSON.stringify(query),
-        async: false,
-        success: function(data) {
-            challengers = data.results;
+        data: {
+            chamber: 'H',
+            state: state,
+            district: district
         }
     });
-    return sortByDistrict(challengers);
 }
 
 function sortByDistrict(data) {
@@ -227,36 +249,8 @@ function buildBillCall(data) {
     return $.get(SUNLIGHT_BILLS_URI, data);
 }
 
-function generateContent(congress) {
-    var bioguide_id = congress.bioguide_id;
-
-    $.when(
-        buildBillCall({
-            sponsor_id: bioguide_id
-        }),
-        buildBillCall({
-            cosponsor_ids: bioguide_id
-        })
-    ).done(function(sponsorData, cosponsorData) {
-        //TODO: error handling
-        var billIds = [];
-        billIds = billIds.concat(_.map(sponsorData[0].results, function(bill) {
-            return bill.bill_id
-        }));
-        billIds = billIds.concat(_.map(cosponsorData[0].results, function(bill) {
-            return bill.bill_id
-        }));
-
-        var supportedTaiwanBills = _.filter(TAIWAN_RELEVANT_BILLS,
-            function(taiwanBill, billId) {
-                return _.include(billIds, billId)
-            })
-
-        $('#' + bioguide_id).html(congress_tpl({
-            congress: congress,
-            taiwanBills: supportedTaiwanBills
-        }));
-    });
+function generateContent(candidate) {
+    $(candidate_tpl(candidate)).appendTo('#main');
 }
 
 $(function() {
@@ -266,22 +260,23 @@ $(function() {
     $('#submit-btn').click(function() {
         $('#main').empty();
         $('.form-control').css('border', '1px solid #ccc');
-
-        var street = $('[name="street"]').val();
-        var zipcode = $('[name="zipcode"]').val();
-        var state = $('[name="state"]').val();
-        var district = $('[name="district"]').val();
-
         errorMsg.hide();
 
-        if (state != '') {
-            // do nothing
-        } else if (street != '' && zipcode != '') {
-            var latitude = getLatitude(zipcode, street);
-            var distResult = getDistrict(latitude);
+        var state, district;
+
+        if ($('#address').hasClass('active')) {
+            var street = $('[name="street"]').val();
+            var zipcode = $('[name="zipcode"]').val();
+            var location = getLocation(zipcode, street);
+            var distResult = getDistrict(location);
             state = distResult['state'];
             district = distResult['district'];
-        } else {
+        } else if ($('#district').hasClass('active')) {
+            state = $('[name="state"]').val();
+            district = $('[name="district"]').val();
+        }
+
+        if (!state || !district) {
             $('.form-control').each(function() {
                 if (!$(this).val()) {
                     $(this).css('border', 'solid 2px red');
@@ -293,57 +288,79 @@ $(function() {
 
         $loadingIcon.show();
 
-        var senators = getSenators(state);
+        var sentaorsDeferred = getSenatorCandidates(state);
+        var repsDeferred = getRepCandidates(state, district);
+        $.when(sentaorsDeferred, repsDeferred).then(function(senatorsCallback, repsCallback) {
+            var senators = senatorsCallback[0];
+            var reps = repsCallback[0];
+
+            $('<div class="row"><div class="col-xs-12"><h2>Senator</h2></div></div>').appendTo('#main');
+            _.each(senators, function(e) {
+                generateContent(e);
+            });
+
+           $('<div class="row"><div class="col-xs-12"><h2>Representative</h2></div></div>').appendTo('#main');
+            _.each(reps, function(e) {
+                generateContent(e);
+            });
+
+
+            $loadingIcon.hide();
+        });
+
+
+        // var senators = getSenators(state);
         
-        // senator candidates from DB
-        var senatorCandidates = getSenatorCandidates(state);
+        // // senator candidates from DB
+        // var senatorCandidates = getSenatorCandidates(state);
 
-        _.each(senators, function(e) {
-            $('<div/>', {
-                id: e.bioguide_id
-            }).appendTo('#main');
-            e.content = getCurrentContentFromDB(senatorCandidates, e);
-        });
+        // _.each(senators, function(e) {
+        //     $('<div/>', {
+        //         id: e.bioguide_id
+        //     }).appendTo('#main');
+        //     e.content = getCurrentContentFromDB(senatorCandidates, e);
+        //     generateContent(e);
+        // });
 
-        var senatorChallengers = excludeCurrent(senatorCandidates, senators);
+        // var senatorChallengers = excludeCurrent(senatorCandidates, senators);
         
-        _.each(senatorChallengers, function(e) {
-            $('<div/>', {
-                id: e.candidateId
-            }).appendTo('#main');
-        });
+        // _.each(senatorChallengers, function(e) {
+        //     $('<div/>', {
+        //         id: e.candidateId
+        //     }).appendTo('#main');
+        // });
 
-        var reps = getReps(state, district);
+        // var reps = getReps(state, district);
 
-        // reps candiadates from DB
-        var repsCandidates = getRepCandidates(state, district);
+        // // reps candiadates from DB
+        // var repsCandidates = getRepCandidates(state, district);
 
-        _.each(reps, function(e) {
-            $('<div/>', {
-                id: e.bioguide_id
-            }).appendTo('#main');
-            e.content = getCurrentContentFromDB(repsCandidates, e);
-        });
+        // _.each(reps, function(e) {
+        //     $('<div/>', {
+        //         id: e.bioguide_id
+        //     }).appendTo('#main');
+        //     e.content = getCurrentContentFromDB(repsCandidates, e);
+        // });
 
-        var repChallengers = excludeCurrent(repsCandidates, reps);
-        _.each(repChallengers, function(e) {
-            $('<div/>', {
-                id: e.candidateId
-            }).appendTo('#main');
-        });
+        // var repChallengers = excludeCurrent(repsCandidates, reps);
+        // _.each(repChallengers, function(e) {
+        //     $('<div/>', {
+        //         id: e.candidateId
+        //     }).appendTo('#main');
+        // });
 
-        _.each(senators, generateContent);
-        _.each(reps, generateContent);
-        _.each(senatorChallengers, function(c) {
-            $('#' + c.candidateId).html(challenger_tpl({
-                challenger: c
-            }));
-        });
-        _.each(repChallengers, function(c) {
-            $('#' + c.candidateId).html(challenger_tpl({
-                challenger: c
-            }));
-        });
-        $loadingIcon.hide();
+        // _.each(senators, generateContent);
+        // _.each(reps, generateContent);
+        // _.each(senatorChallengers, function(c) {
+        //     $('#' + c.candidateId).html(challenger_tpl({
+        //         challenger: c
+        //     }));
+        // });
+        // _.each(repChallengers, function(c) {
+        //     $('#' + c.candidateId).html(challenger_tpl({
+        //         challenger: c
+        //     }));
+        // });
+        // $loadingIcon.hide();
     });
 });

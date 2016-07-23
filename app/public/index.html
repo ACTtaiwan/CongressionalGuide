@@ -160,187 +160,35 @@
                 </div>
             </div>
         </div>
-        <div id="main">
+        <div id="main" class="container">
         </div> <!-- /#main -->
     </div>
-    
-    <script type="text/template" id="congress-tpl">
-        <% congress = result.congress %>
-        <% taiwanBills = result.taiwanBills %>
-        <%if(congress.chamber === 'senate'){%>
-            <div class="jumbotron bg-success">
-        <%}else if (congress.chamber === 'house'){%>
-            <div class="jumbotron bg-warning">
-        <%}%>
-        <div class="container">
+
+    <script type="text/template" id="candidate-tpl">
+        <div class="row">
             <div class="col-sm-5 col-xs-12">
-                <h3>
-                    <%if(congress.chamber === 'senate'){%>
-                        Current Senator
-                    <%}else if (congress.chamber === 'house'){%>
-                        Current Representative
-                    <%}%>: <br/>
-                    <%=congress.first_name%> <%=congress.last_name%>
-                </h3>
-                <img class="img-responsive" src="https://d26u557eiepppx.cloudfront.net/images/congress/225x275/<%=congress.bioguide_id%>.jpg"/>
-                <h3>Party:
-                    <%if(congress.party === 'R'){%>
+                <h3><%if(incumbent){%>
+                        Incumbent
+                    <%}else{%>
+                        Challenger
+                    <%}%>
+                <h3><%=name%></h3>
+                <img class="img-responsive" src=""/>
+                <h3><%if(party === 'R'){%>
                         Republican
-                    <%}else if(congress.party === 'D'){%>
+                    <%}else if(party === 'D'){%>
                         Democratic
                     <%}else{%>
                         Independent
                     <%}%>
                 </h3>
-                <%if(congress.district){%>
-                    <h3>District: <%=congress.district%></h3>
+                <%if(chamber === 'H'){%>
+                    <h3>District: <%=district%></h3>
                 <%}%>
-                <div>
-                    <%if(congress.website){%>
-                        <a href="<%=congress.website%>" target="_blank"><img class="social-icon" src="./img/link-icon.png"/></a>
-                    <%}%>
-                    <%if(congress.oc_email){%>
-                        <a href="mailto:<%=congress.oc_email%>?body=Dear <%=congress.first_name%> <%=congress.last_name%>,%0D%0A" target="_blank"><img class="social-icon" src="./img/email-icon.png"/></a>
-                    <%}%>
-                    <%if(congress.facebook_id){%>
-                        <a href="http://www.facebook.com/<%=congress.facebook_id%>" target="_blank"><img class="social-icon" src="./img/facebook-icon.png"/></a>
-                    <%}%>
-                    <%if(congress.twitter_id){%>
-                        <a href="http://www.twitter.com/<%=congress.twitter_id%>" target="_blank"><img class="social-icon" src="./img/twitter-icon.png"/></a>
-                    <%}%>
-                    <%if(congress.youtube_id){%>
-                        <a href="http://www.youtube.com/<%=congress.youtube_id%>" target="_blank"><img class="social-icon" src="./img/youtube-icon.png"/></a>
-                    <%}%>
-                </div>
             </div>
-            <div class="col-sm-5 col-sm-offset-1 col-xs-12">
-                <h3>Numbers of Supported Taiwan Bills: <%=taiwanBills.length%></h3>
-                    <%_.each(taiwanBills, function(taiwanBill){%>
-                        <div class="supported-taiwan-bill">
-                            <h4>
-                                <a href="<%=taiwanBill.link%>"><%=taiwanBill.name%></a>
-                            </h4>
-                        </div>
-                    <%})%>
-
-                    <%if(congress.content){%>
-                        <h4>Response</h4>
-                        <div><%congress.content%></div>
-                    <%} else {%>
-                        <h4>
-                            Ask this Candidate to answer the questionnaire on their support for Taiwan.<br>
-                            <a href="http://americancitizensfortaiwan.org/q">See the questionnaire.</a>
-                        </h4>
-                        <%if(congress.twitter_id){%>
-                            <a href="https://twitter.com/intent/tweet?text=@<%=congress.twitter_id%>%20Will%20you%20support%20our%20important%20trade%20and%20security%20ally%20Taiwan? Please%20answer%20the%20questions%20at:%20http%3A%2F%2FACTtaiwan.org%2Fq" target="_blank"><img class="social-icon-64" src="./img/twitter-square-icon-64.png"/></a>
-                            <h5>Click on the Twitter icon to ask the candidate via Twitter to answer the questionnaire</h5>
-                        <%}%>
-                        <%if(congress.oc_email){%>
-                            <a href="mailto:<%=congress.oc_email%>?subject=Will you support our important trade and security ally Taiwan? Please let us know your stand&body=
-                                Dear <%=congress.first_name%> <%=congress.last_name%>,%0D%0A%0D%0A
-                                As you may know, Taiwan is very important partner and ally to the U.S. In 2013, the U.S. exported $25.5 billion to Taiwan, worth over 143,000 jobs. Taiwan is also a key part of the Asia-Pacific security sphere; if Communist China were to take over Taiwan, Beijing would finally have access to a blue-water port to launch its submarines undetected into the Pacific.%0D%0A%0D%0A
-                                We are very concerned that the U.S. work to strengthen the enduring bonds between the American and Taiwanese peoples. As with many in my community, we want our elected representatives to support self-determination and the protection of democracy for Taiwan, as these will protect American interests in Asia.%0D%0A%0D%0A
-                                Please reach out to the local Taiwanese American community and those concerned with America’s relationship with Taiwan by completing the American Citizens for Taiwan Candidate Questionnaire. It will be posted publically at voterguide.ACTtaiwan.org and widely distributed via the web, social media, mailing lists, and at public events.%0D%0A%0D%0A
-                                Please respond to the questions below, and then send the completed questionnaire to American Citizens for Taiwan <legislativerelations@acttaiwan.org>.%0D%0A%0D%0A
-                                Thank you for your consideration of our request.%0D%0A%0D%0A%0D%0A
-                                American Citizens for Taiwan Candidate Questionnaire%0D%0A%0D%0A
-                                1. If you are not already a member of the Taiwan Caucus, will you join?%0D%0A%0D%0A
-                                2. In this period of economic difficulty, exports and the jobs they provide are essential. Will you support pushing forward with a trade agreement with Taiwan that could increase U.S. exports?%0D%0A%0D%0A
-                                3. As laid out in the Taiwan Relations Act [United States Code, Title 22, Chapter 48, Section 3301], the human rights of Taiwanese are a key interest of the United States. Will you commit to publicly speaking out against threats to Taiwanese human rights, as well as supporting legislation strengthening the U.S. commitment to such?%0D%0A%0D%0A
-                                4. The Taiwan Relations Act states that any determination of Taiwan’s future by other than peaceful means would threaten the peace and security of the Western Pacific area; with this commitment to human rights, the only acceptable method is Taiwanese self-determination with no external compulsion or external interference. Will you commit to a public stance that Taiwan’s future can only be determined fairly by all the residents of Taiwan via plebiscite, where the issue of change in status is clearly laid out?%0D%0A%0D%0A
-                                5. In order to protect Taiwan’s democracy, it must have a credible deterrent from threats outside its borders. The Taiwan Relations Act clearly lays out in Section 3302 the policy of making available weapons to enable Taiwan to maintain a sufficient self-defense capability. Defense experts’ opinions overwhelmingly state that Taiwan’s current defense status is not sufficient for self-defense. Will you support additional weapons sales to Taiwan in order to bring credible deterrence back into line with the threat from the PRC military?
-                                &cc=legislativerelations@acttaiwan.org" target="_blank"><img class="social-icon-64" src="./img/email-square-icon-64.png"/></a>
-                            <h5>
-                                To ask via email, click on email button to have the questionnaire text and candidate’s email address filled out from your email
-                            </h5>
-                        <%}%>
-                        <h5>Please do both methods if you are able.</h5>
-
-                    <%}%>
-                </div>
-            </div>
-        </div><!-- .container end -->
+        </div>
     </script>
-    <script type="text/template" id="challenger-tpl">
-        <% challenger = result.challenger %>
-        <%if(challenger.chamber === 'senate'){%>
-            <div class="jumbotron bg-danger">
-        <%}else if (challenger.chamber === 'house'){%>
-            <div class="jumbotron bg-info">
-        <%}%>
-        <div class="container">
-            <div class="col-sm-5 col-xs-12">
-                <h3>
-                    <%if(challenger.chamber === 'senate'){%>
-                        Senator challenger
-                    <%}else if (challenger.chamber === 'house'){%>
-                        Representative challenger
-                    <%}%>: <br/>
-                    <%=challenger.name%>
-                </h3>
-                <%if(challenger.picture) {%>
-                    <img class="img-responsive" src="<%=challenger.picture.url%>"/>
-                <%}%>
-                    <h3>Party: <%=challenger.party%></h3>
-                <%if(challenger.district && challenger.district != '0'){%>
-                    <h3>District: <%=challenger.district%></h3>
-                <%}%>
-                <div>
-                    <%if(challenger.website){%>
-                        <a href="<%=challenger.website%>" target="_blank"><img class="social-icon" src="./img/link-icon.png"/></a>
-                    <%}%>
-                    <%if(challenger.email){%>
-                        <a href="mailto:<%=challenger.email%>?body=Dear <%=challenger.name%>,%0D%0A" target="_blank"><img class="social-icon" src="./img/email-icon.png"/></a>
-                    <%}%>
-                    <%if(challenger.facebook){%>
-                        <a href="<%=challenger.facebook%>" target="_blank"><img class="social-icon" src="./img/facebook-icon.png"/></a>
-                    <%}%>
-                    <%if(challenger.twitter){%>
-                        <a href="<%=challenger.twitter%>" target="_blank"><img class="social-icon" src="./img/twitter-icon.png"/></a>
-                    <%}%>
-                    <%if(challenger.youtube){%>
-                        <a href="<%=challenger.youtube%>" target="_blank"><img class="social-icon" src="./img/youtube-icon.png"/></a>
-                    <%}%>
-                </div>
-            </div>
-            <div class="col-sm-5 col-sm-offset-1 col-xs-12">
 
-                <%if(challenger.content){%>
-                    <h4>Response</h4>
-                    <div><%=challenger.content%></div>
-                <%} else {%>
-                    <h4>
-                        Ask this Candidate to answer the questionnaire on their support for Taiwan.<br>
-                        <a href="http://americancitizensfortaiwan.org/q">See the questionnaire.</a>
-                    </h4>
-                    <%if(challenger.twitterId){%>
-                    <a href="https://twitter.com/intent/tweet?text=@<%=challenger.twitterId%>%20Will%20you%20support%20our%20important%20trade%20and%20security%20ally%20Taiwan? Please%20answer%20the%20questions%20at:%20http%3A%2F%2FACTtaiwan.org%2Fq" target="_blank"><img class="social-icon-64" src="./img/twitter-square-icon-64.png"/></a>
-                    <h5>Click on the Twitter icon to ask the candidate via Twitter to answer the questionnaire</h5>
-                    <%}%>
-                    <%if(challenger.email){%>
-                        <a href="mailto:<%=challenger.email%>?subject=Will you support our important trade and security ally Taiwan? Please let us know your stand&body=
-                            Dear <%=challenger.name%>,%0D%0A%0D%0A
-                            As you may know, Taiwan is very important partner and ally to the U.S. In 2013, the U.S. exported $25.5 billion to Taiwan, worth over 143,000 jobs. Taiwan is also a key part of the Asia-Pacific security sphere; if Communist China were to take over Taiwan, Beijing would finally have access to a blue-water port to launch its submarines undetected into the Pacific.%0D%0A%0D%0A
-                            We are very concerned that the U.S. work to strengthen the enduring bonds between the American and Taiwanese peoples. As with many in my community, we want our elected representatives to support self-determination and the protection of democracy for Taiwan, as these will protect American interests in Asia.%0D%0A%0D%0A
-                            Please reach out to the local Taiwanese American community and those concerned with America’s relationship with Taiwan by completing the American Citizens for Taiwan Candidate Questionnaire. It will be posted publically at voterguide.ACTtaiwan.org and widely distributed via the web, social media, mailing lists, and at public events.%0D%0A%0D%0A
-                            Please respond to the questions below, and then send the completed questionnaire to American Citizens for Taiwan <legislativerelations@acttaiwan.org>.%0D%0A%0D%0A
-                            Thank you for your consideration of our request.%0D%0A%0D%0A%0D%0A
-                            American Citizens for Taiwan Candidate Questionnaire%0D%0A%0D%0A
-                            1. If you are not already a member of the Taiwan Caucus, will you join?%0D%0A%0D%0A
-                            2. In this period of economic difficulty, exports and the jobs they provide are essential. Will you support pushing forward with a trade agreement with Taiwan that could increase U.S. exports?%0D%0A%0D%0A
-                            3. As laid out in the Taiwan Relations Act [United States Code, Title 22, Chapter 48, Section 3301], the human rights of Taiwanese are a key interest of the United States. Will you commit to publicly speaking out against threats to Taiwanese human rights, as well as supporting legislation strengthening the U.S. commitment to such?%0D%0A%0D%0A
-                            4. The Taiwan Relations Act states that any determination of Taiwan’s future by other than peaceful means would threaten the peace and security of the Western Pacific area; with this commitment to human rights, the only acceptable method is Taiwanese self-determination with no external compulsion or external interference. Will you commit to a public stance that Taiwan’s future can only be determined fairly by all the residents of Taiwan via plebiscite, where the issue of change in status is clearly laid out?%0D%0A%0D%0A
-                            5. In order to protect Taiwan’s democracy, it must have a credible deterrent from threats outside its borders. The Taiwan Relations Act clearly lays out in Section 3302 the policy of making available weapons to enable Taiwan to maintain a sufficient self-defense capability. Defense experts’ opinions overwhelmingly state that Taiwan’s current defense status is not sufficient for self-defense. Will you support additional weapons sales to Taiwan in order to bring credible deterrence back into line with the threat from the PRC military?
-                            &cc=legislativerelations@acttaiwan.org" target="_blank"><img class="social-icon-64" src="./img/email-square-icon-64.png"/></a>
-                        <h5>
-                            To ask via email, click on email button to have the questionnaire text and candidate’s email address filled out from your email
-                        </h5>
-                    <%}%>
-                    <h5>Please do both methods if you are able.</h5>
-                <%}%>
-            </div>
-        </div><!-- .container end -->
-    </script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
