@@ -9,7 +9,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var CronJob = require('cron').CronJob;
 
-var SUNLIGHT_APIKEY = 'd9eeb169a7224fe28ae0f32aca0dc93e';
+var SUNLIGHT_APIKEY = '[apikey]';
 
 
 var routes = require('./routes/index');
