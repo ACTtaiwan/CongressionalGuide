@@ -19,7 +19,7 @@ If you are running locally where you are changing and working with the code, run
 * The -v option mounts the current directory you are in to the container, any changes made in this directory will immediately be available.
 * You will be dropped into the `/opt/app` directory where you can run commands. Changes that are then made to this directly will all change the directly locally.
 * You can run commands such as `node server.js`
-* Note you may need to run `npm install` to install nodejs dependencies locally.
+* **Note** you will need to run `npm install` to install nodejs dependencies locally. Then run `npm start` to start up the server. Then you can access the running webpage.
 
 ## Interaction with the Container or Code
 Access the running acttaiwan/cgapp Container bash shell to interact live with both data and running processes
