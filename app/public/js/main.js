@@ -249,16 +249,12 @@ function buildBillCall(data) {
     return $.get(SUNLIGHT_BILLS_URI, data);
 }
 
-function generateContent(candidate) {
-    $(candidate_tpl(candidate)).appendTo('#main');
-}
-
 $(function() {
     var $loadingIcon = $('#loading-icon');
     var errorMsg = $('#error-msg');
 
     $('#submit-btn').click(function() {
-        $('#main').empty();
+        // $('#main').empty();
         $('.form-control').css('border', '1px solid #ccc');
         errorMsg.hide();
 
@@ -294,14 +290,12 @@ $(function() {
             var senators = senatorsCallback[0];
             var reps = repsCallback[0];
 
-            $('<div class="row"><div class="col-xs-12"><h2>Senator</h2></div></div>').appendTo('#main');
             _.each(senators, function(e) {
-                generateContent(e);
+                $(candidate_tpl({candidate: e})).appendTo('#senators');
             });
 
-           $('<div class="row"><div class="col-xs-12"><h2>Representative</h2></div></div>').appendTo('#main');
             _.each(reps, function(e) {
-                generateContent(e);
+                $(candidate_tpl({candidate: e})).appendTo('#representatives');
             });
 
 

@@ -161,29 +161,59 @@
             </div>
         </div>
         <div id="main" class="container">
+            <div class="jumbotron bg-success">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h2>Senator</h2>
+                    </div>
+                </div>
+                <div id="senators" class="row"></div>
+            </div>
+            <div class="jumbotron bg-warning">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h2>Representative</h2>
+                    </div>
+                </div>
+                <div id="representatives" class="row"></div>
+            </div>
         </div> <!-- /#main -->
     </div>
 
     <script type="text/template" id="candidate-tpl">
-        <div class="row">
-            <div class="col-sm-5 col-xs-12">
-                <h3><%if(incumbent){%>
-                        Incumbent
-                    <%}else{%>
-                        Challenger
-                    <%}%>
-                <h3><%=name%></h3>
-                <img class="img-responsive" src=""/>
-                <h3><%if(party === 'R'){%>
-                        Republican
-                    <%}else if(party === 'D'){%>
-                        Democratic
-                    <%}else{%>
-                        Independent
-                    <%}%>
-                </h3>
-                <%if(chamber === 'H'){%>
-                    <h3>District: <%=district%></h3>
+        <div class="col-xs-2">
+            <img class="img-responsive" src=""/>
+        </div>
+        <div class="col-xs-4">
+            <h4><%if(candidate.incumbent){%>
+                    Incumbent
+                <%}else{%>
+                    Challenger
+                <%}%></h4>
+            <h4><%=candidate.name%></h4>
+            <h4><%if(candidate.party === 'R'){%>
+                    Republican
+                <%}else if(candidate.party === 'D'){%>
+                    Democratic
+                <%}else{%>
+                    Independent
+                <%}%>
+            </h4>
+            <div>
+                <%if(candidate.website){%>
+                <a href="<%=congress.website%>" target="_blank"><img class="social-icon" src="./img/link-icon.png"/></a>
+                <%}%>
+                <%if(candidate.email){%>
+                <a href="mailto:<%=congress.oc_email%>?body=Dear <%=candidate.name%>,%0D%0A" target="_blank"><img class="social-icon" src="./img/email-icon.png"/></a>
+                <%}%>
+                <%if(candidate.facebook_id){%>
+                <a href="http://www.facebook.com/<%=candidate.facebook_id%>" target="_blank"><img class="social-icon" src="./img/facebook-icon.png"/></a>
+                <%}%>
+                <%if(candidate.twitter_id){%>
+                <a href="http://www.twitter.com/<%=candidate.twitter_id%>" target="_blank"><img class="social-icon" src="./img/twitter-icon.png"/></a>
+                <%}%>
+                <%if(candidate.youtube_id){%>
+                <a href="http://www.youtube.com/<%=candidate.youtube_id%>" target="_blank"><img class="social-icon" src="./img/youtube-icon.png"/></a>
                 <%}%>
             </div>
         </div>
