@@ -9,6 +9,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var CronJob = require('cron').CronJob;
 
+var SUNLIGHT_APIKEY = 'd9eeb169a7224fe28ae0f32aca0dc93e';
+
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -19,7 +21,7 @@ var app = express();
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('db');
 db.serialize(function() {
-  db.run('CREATE TABLE IF NOT EXISTS candidates(name TEXT, party TEXT, chamber TEXT, state TEXT, district INT, fecId TEXT)');
+  db.run('CREATE TABLE IF NOT EXISTS candidates(name TEXT, party TEXT, chamber TEXT, state TEXT, district INT, incumbent INT, fecId TEXT)');
 });
 
 new CronJob('0 0 * * * *', function() {
@@ -27,7 +29,7 @@ new CronJob('0 0 * * * *', function() {
   db.each("SELECT fecId FROM candidates", function(err, row) {
     candidateIds.push(row.fecId);
   }, function() {
-    fetchCandidatesData('http://realtime.influenceexplorer.com/api/candidates/?format=json&page=1&apikey=' + '[apikey]', candidateIds);
+    fetchCandidatesData('http://realtime.influenceexplorer.com/api/candidates/?format=json&page=1&apikey=' + SUNLIGHT_APIKEY, candidateIds);
   });
 }, null, true, 'America/Los_Angeles');
 
@@ -41,7 +43,7 @@ function fetchCandidatesData(url, existedCandidateIds) {
     res.on('end', () => {
       var data = JSON.parse(jsonString);
       var candidates = data.results;
-      var stmt = db.prepare('INSERT INTO candidates VALUES (?, ?, ?, ?, ?, ?)');
+      var stmt = db.prepare('INSERT INTO candidates VALUES (?, ?, ?, ?, ?, ?, ?)');
       for (var i = 0; i < candidates.length; i++) {
         if (candidates[i].election_year == 2016 && existedCandidateIds.indexOf(candidates[i].fec_id) < 0) {
           console.log('adding new candidate: ' + candidates[i].name);
@@ -51,6 +53,7 @@ function fetchCandidatesData(url, existedCandidateIds) {
             candidates[i].office,
             candidates[i].state,
             candidates[i].office_district,
+            candidates[i].is_incumbent,
             candidates[i].fec_id
           );
         }
