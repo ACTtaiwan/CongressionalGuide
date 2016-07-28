@@ -1,3 +1,4 @@
+/*jshint esversion: 6 */
 'use strict';
 
 var express = require('express');
@@ -10,6 +11,8 @@ var bodyParser = require('body-parser');
 var CronJob = require('cron').CronJob;
 
 var SUNLIGHT_APIKEY = 'd9eeb169a7224fe28ae0f32aca0dc93e';
+var LEGISTLATOR_URL = 'http://congress.api.sunlightfoundation.com/legislators';
+var BILL_URL = 'http://congress.api.sunlightfoundation.com/bills?bill_id__in=sconres38-114|hconres88-114|s2426-114|hr4154-114|hr1853-114|hconres76-114|s1683-113|hres494-113|hjres109-113|sjres31-113|hconres55-113|hconres46-113|hr1151-113|s579-113|hres185-113|hconres29-113|s12-113|hr419-113&fields=official_title,urls.congress,sponsor_id,cosponsor_ids';
 
 
 var routes = require('./routes/index');
@@ -29,13 +32,30 @@ db.serialize(function() {
     'state TEXT, ' +
     'district INT, ' +
     'incumbent BOOLEAN, ' +
-    'biguideId TEXT,' +
+    'bioguideId TEXT,' +
     'fecId TEXT,' +
+    'website TEXT,' +
+    'email TEXT,' +
+    'facebook TEXT,' +
+    'twitter TEXT,' +
+    'youtube TEXT,' +
     'note BLOB' +
-    ')');
+  ')');
+
+  db.run('CREATE TABLE IF NOT EXISTS bills(' +
+    'billId TEXT, ' +
+    'officialTitle BLOB, ' +
+    'sponsorId TEXT, ' +
+    'url TEXT' +
+  ')');
+
+  db.run('CREATE TABLE IF NOT EXISTS cosponsors_bills(' +
+    'cosponsorId TEXT REFERENCES candidates (bioguideId), ' +
+    'billId TEXT REFERENCES bills (billId)' +
+  ')');
 });
 
-// new CronJob('0 0 * * * *', function() {
+new CronJob('0 0 * * * *', function() {
   var candidateFecIds = [];
   // fecId should be a good unique ID for candidate
   db.each("SELECT fecId FROM candidates", function(err, row) {
@@ -43,12 +63,12 @@ db.serialize(function() {
   }, function() {
     fetchCandidatesData('http://realtime.influenceexplorer.com/api/candidates/?format=json&page=1&apikey=' + SUNLIGHT_APIKEY, candidateFecIds);
   });
-// }, null, true, 'America/Los_Angeles');
+}, null, true, 'America/Los_Angeles');
 
 
 function fetchCandidatesData(url, existedCandidateFecIds) {
   http.get(url, (res) => {
-    var jsonString = ''
+    var jsonString = '';
     res.on('data', (d) => {
       jsonString += d;
     });
@@ -59,8 +79,8 @@ function fetchCandidatesData(url, existedCandidateFecIds) {
         'VALUES ($firstName, $lastName, $party, $chamber, $state, $district, $incumbent, $fecId)');
       for (var i = 0; i < candidates.length; i++) {
         if ((candidates[i].office === 'H' || candidates[i].office === 'S') &&
-          candidates[i].election_year == 2016 && 
-          existedCandidateFecIds.indexOf(candidates[i].fec_id) < 0) {
+            candidates[i].election_year == 2016 && 
+            existedCandidateFecIds.indexOf(candidates[i].fec_id) < 0) {
           console.log('adding new candidate: ' + candidates[i].name);
           var name = candidates[i].name.split(',');
           var lastName, firstName;
@@ -99,8 +119,67 @@ function fetchCandidatesData(url, existedCandidateFecIds) {
 }
 
 function toTitleCase(str) {
-    return str.replace(/\b\w+/g,function(s){return s.charAt(0).toUpperCase() + s.substr(1).toLowerCase();});
+  return str.replace(/\b\w+/g,function(s){return s.charAt(0).toUpperCase() + s.substr(1).toLowerCase();});
 }
+
+
+// function fetchLegislatorsData() {
+//   db.serialize(function() {
+//     db.each("SELECT fecId FROM candidates WHERE incumbent=1", function(err, row) {
+//       http.get(LEGISTLATOR_URL + '?fec_ids=' + row.fecId + '&apikey=' + SUNLIGHT_APIKEY, (res) => {
+//         var jsonString = '';
+//         res.on('data', (d) =>  {
+//           jsonString += d;
+//         });
+//         res.on('end', () => {
+//           var data = JSON.parse(jsonString);
+//           var legislator = data.results[0];
+//           if (legislator) {
+//             db.run("UPDATE candidates SET bioguideId = $bioguideId, email = $email, facebook = $facebook, twitter = $twitter, website = $website, youtube = $youtube WHERE fecId = $fecId", {
+//               $bioguideId: legislator.bioguide_id,
+//               $email: legislator.oc_email,
+//               $facebook: legislator.facebook_id,
+//               $twitter: legislator.twitter_id,
+//               $website: legislator.website,
+//               $youtube: legislator.youtube_id,
+//               $fecId: row.fecId
+//             });
+//           }
+//         });
+//       }).on('error', (e) => {
+//         console.log(`Got error: ${e.message}`);
+//       });
+//     });
+//   });
+// }
+// fetchLegislatorsData();
+// 
+// function populateBillsTable() {
+//   http.get(BILL_URL + '&apikey=' + SUNLIGHT_APIKEY, (res) => {
+//     var jsonString = '';
+//     res.on('data', (d) => {
+//       jsonString += d;
+//     });
+//     res.on('end', () => {
+//       var data = JSON.parse(jsonString);
+//       var bills = data.results;
+//       var stmt = db.prepare('INSERT INTO bills (billId, officialTitle, sponsorId, url) ' +
+//         'VALUES ($billId, $officialTitle, $sponsorId, $url)');
+//       for (var i = 0; i < bills.length; i++) {
+//         stmt.run({
+//           $billId: bills[i].bill_id,
+//           $officialTitle: bills[i].official_title,
+//           $sponsorId: bills[i].sponsor_id,
+//           $url: bills[i].urls.congress
+//         });
+//       }
+//       stmt.finalize();
+//     });
+//   }).on('error', (e) => {
+//     console.log(`Got error: ${e.message}`);
+//   });
+// }
+// populateBillsTable();
 
 
 
