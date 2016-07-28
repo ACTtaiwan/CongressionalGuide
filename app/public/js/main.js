@@ -290,105 +290,113 @@ $(function() {
             var senators = senatorsCallback[0];
             var reps = repsCallback[0];
 
-            var MOCK_CANDIDATES = [
-                {
-                    "img_src": "https://d26u557eiepppx.cloudfront.net/images/congress/225x275/M001111.jpg",
-                    "bioguide_id":"M001111",
-                    "birthday":"1950-10-11",
-                    "chamber":"senate",
-                    "contact_form":"http://www.murray.senate.gov/public/index.cfm/contactme",
-                    "crp_id":"N00007876",
-                    "district":null,
-                    "facebook_id":null,
-                    "fax":"202-224-0238",
-                    "fec_ids":[
-                       "S2WA00189"
-                    ],
-                    "first_name":"Patty",
-                    "gender":"F",
-                    "govtrack_id":"300076",
-                    "icpsr_id":49308,
-                    "in_office":true,
-                    "last_name":"Murray",
-                    "lis_id":"S229",
-                    "middle_name":null,
-                    "name_suffix":null,
-                    "nickname":null,
-                    "oc_email":"Sen.Murray@opencongress.org",
-                    "ocd_id":"ocd-division/country:us/state:wa",
-                    "office":"154 Russell Senate Office Building",
-                    "party":"D",
-                    "phone":"202-224-2621",
-                    "senate_class":3,
-                    "state":"WA",
-                    "state_name":"Washington",
-                    "state_rank":"senior",
-                    "term_end":"2017-01-03",
-                    "term_start":"2011-01-05",
-                    "thomas_id":"01409",
-                    "title":"Sen",
-                    "twitter_id":"PattyMurray",
-                    "votesmart_id":53358,
-                    "website":"http://www.murray.senate.gov",
-                    "youtube_id":"SenatorPattyMurray"
-                 },
-                 {
-                    "img_src": "https://d26u557eiepppx.cloudfront.net/images/congress/225x275/C000127.jpg",
-                    "bioguide_id":"C000127",
-                    "birthday":"1958-10-13",
-                    "chamber":"senate",
-                    "contact_form":"http://www.cantwell.senate.gov/public/index.cfm/email-maria",
-                    "crp_id":"N00007836",
-                    "district":null,
-                    "facebook_id":null,
-                    "fax":"202-228-0514",
-                    "fec_ids":[
-                       "S8WA00194",
-                       "H2WA01054"
-                    ],
-                    "first_name":"Maria",
-                    "gender":"F",
-                    "govtrack_id":"300018",
-                    "icpsr_id":39310,
-                    "in_office":true,
-                    "last_name":"Cantwell",
-                    "lis_id":"S275",
-                    "middle_name":null,
-                    "name_suffix":null,
-                    "nickname":null,
-                    "oc_email":"Sen.Cantwell@opencongress.org",
-                    "ocd_id":"ocd-division/country:us/state:wa",
-                    "office":"511 Hart Senate Office Building",
-                    "party":"D",
-                    "phone":"202-224-3441",
-                    "senate_class":1,
-                    "state":"WA",
-                    "state_name":"Washington",
-                    "state_rank":"junior",
-                    "term_end":"2019-01-03",
-                    "term_start":"2013-01-03",
-                    "thomas_id":"00172",
-                    "title":"Sen",
-                    "twitter_id":"SenatorCantwell",
-                    "votesmart_id":27122,
-                    "website":"http://www.cantwell.senate.gov",
-                    "youtube_id":"SenatorCantwell"
-                }
-            ];
+            // var MOCK_CANDIDATES = [
+            //     {
+            //         "img_src": "https://d26u557eiepppx.cloudfront.net/images/congress/225x275/M001111.jpg",
+            //         "bioguide_id":"M001111",
+            //         "birthday":"1950-10-11",
+            //         "chamber":"senate",
+            //         "contact_form":"http://www.murray.senate.gov/public/index.cfm/contactme",
+            //         "crp_id":"N00007876",
+            //         "district":null,
+            //         "facebook_id":null,
+            //         "fax":"202-224-0238",
+            //         "fec_ids":[
+            //            "S2WA00189"
+            //         ],
+            //         "first_name":"Patty",
+            //         "gender":"F",
+            //         "govtrack_id":"300076",
+            //         "icpsr_id":49308,
+            //         "in_office":true,
+            //         "last_name":"Murray",
+            //         "lis_id":"S229",
+            //         "middle_name":null,
+            //         "name_suffix":null,
+            //         "nickname":null,
+            //         "oc_email":"Sen.Murray@opencongress.org",
+            //         "ocd_id":"ocd-division/country:us/state:wa",
+            //         "office":"154 Russell Senate Office Building",
+            //         "party":"D",
+            //         "phone":"202-224-2621",
+            //         "senate_class":3,
+            //         "state":"WA",
+            //         "state_name":"Washington",
+            //         "state_rank":"senior",
+            //         "term_end":"2017-01-03",
+            //         "term_start":"2011-01-05",
+            //         "thomas_id":"01409",
+            //         "title":"Sen",
+            //         "twitter_id":"PattyMurray",
+            //         "votesmart_id":53358,
+            //         "website":"http://www.murray.senate.gov",
+            //         "youtube_id":"SenatorPattyMurray"
+            //      },
+            //      {
+            //         "img_src": "https://d26u557eiepppx.cloudfront.net/images/congress/225x275/C000127.jpg",
+            //         "bioguide_id":"C000127",
+            //         "birthday":"1958-10-13",
+            //         "chamber":"senate",
+            //         "contact_form":"http://www.cantwell.senate.gov/public/index.cfm/email-maria",
+            //         "crp_id":"N00007836",
+            //         "district":null,
+            //         "facebook_id":null,
+            //         "fax":"202-228-0514",
+            //         "fec_ids":[
+            //            "S8WA00194",
+            //            "H2WA01054"
+            //         ],
+            //         "first_name":"Maria",
+            //         "gender":"F",
+            //         "govtrack_id":"300018",
+            //         "icpsr_id":39310,
+            //         "in_office":true,
+            //         "last_name":"Cantwell",
+            //         "lis_id":"S275",
+            //         "middle_name":null,
+            //         "name_suffix":null,
+            //         "nickname":null,
+            //         "oc_email":"Sen.Cantwell@opencongress.org",
+            //         "ocd_id":"ocd-division/country:us/state:wa",
+            //         "office":"511 Hart Senate Office Building",
+            //         "party":"D",
+            //         "phone":"202-224-3441",
+            //         "senate_class":1,
+            //         "state":"WA",
+            //         "state_name":"Washington",
+            //         "state_rank":"junior",
+            //         "term_end":"2019-01-03",
+            //         "term_start":"2013-01-03",
+            //         "thomas_id":"00172",
+            //         "title":"Sen",
+            //         "twitter_id":"SenatorCantwell",
+            //         "votesmart_id":27122,
+            //         "website":"http://www.cantwell.senate.gov",
+            //         "youtube_id":"SenatorCantwell"
+            //     }
+            // ];
 
-            var senatorCandidates = repsCandidates = MOCK_CANDIDATES;
-
-            _.each(senatorCandidates, function(candidate) {
-                // TODO: categorize candidates into Incumbent and a list of Challengers
-                var challengers = incumbent = candidate;
-                $(incumbent_with_challenger_tpl({incumbent: incumbent, challengers: challengers})).appendTo('#senator_row');
+            // var senatorCandidates = repsCandidates = MOCK_CANDIDATES;
+            senators = _.sortBy(senators, function(candidate) {
+                return !candidate.incumbent;
+            });
+            reps = _.sortBy(reps, function(candidate) {
+                return !candidate.incumbent;
             });
 
-            _.each(repsCandidates, function(candidate) {
-                // TODO: categorize candidates into Incumbent and a list of Challengers
-                var challengers = incumbent = candidate;
-                $(incumbent_with_challenger_tpl({incumbent: incumbent, challengers: challengers})).appendTo('#reps_row');
-            });
+            $(incumbent_with_challenger_tpl({candidates: senators})).appendTo('#senator_row');
+            $(incumbent_with_challenger_tpl({candidates: reps})).appendTo('#reps_row');
+            // _.each(senators, function(candidate) {
+            //     // TODO: categorize candidates into Incumbent and a list of Challengers
+            //     var challengers = incumbent = candidate;
+
+            // });
+
+            // _.each(reps, function(candidate) {
+            //     // TODO: categorize candidates into Incumbent and a list of Challengers
+            //     var challengers = incumbent = candidate;
+            //     $(incumbent_with_challenger_tpl({incumbent: incumbent, challengers: challengers})).appendTo('#reps_row');
+            // });
 
             $loadingIcon.hide();
         });

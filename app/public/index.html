@@ -179,16 +179,24 @@
     </div>
 
     <script type="text/template" id="incumbent-with-challenger-tpl">
-        <%var candidate_tpl = _.template($("#candidate-tpl").html());%>
+        <% var candidate_tpl = _.template($("#candidate-tpl").html());%>
+        <% _.each(candidates, function(candidate) { %>
+            <% if(_.indexOf(candidates, candidate) % 2 === 0) { %>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <%= candidate_tpl({candidate: candidate, role: "Incumbent"})%>
+                    </div>
+            <% } else { %>
+                    <div class="col-xs-6">
+                        <%= candidate_tpl({candidate: candidate, role: "Challenger"})%>
+                    </div>
+                </div>
+            <% } %>
+        <% }) %>
 
-        <div class="row">
-            <div class="col-xs-6">
-                <%= candidate_tpl({candidate: incumbent, role: "Incumbent"})%>
-            </div>
-            <div class="col-xs-6">
-                <%= candidate_tpl({candidate: challengers, role: "Challenger"})%>
-            </div>
-        </div>
+        <% if(candidates.length % 2 !== 0) { %>
+                </div>
+        <% } %>
     </script>
 
     <script type="text/template" id="candidate-tpl">
@@ -197,8 +205,8 @@
                 <img class="img-responsive" src="<%=candidate.img_src%>"/>
             </div>
             <div class="col-xs-6">
-                <h4 class="text-danger"><%=role%></h4>
-                <h4><%=candidate.last_name + " " + candidate.first_name%></h4>
+                <h4 class="text-danger"><%= candidate.incumbent ? 'Incumbent' : 'Challenger' %></h4>
+                <h4><%=candidate.firstName + ' ' + candidate.lastName%></h4>
                 <h4><%if(candidate.party === 'R'){%>
                         Republican
                     <%}else if(candidate.party === 'D'){%>
@@ -212,21 +220,21 @@
                     <a href="<%=candidate.website%>" target="_blank"><img class="social-icon" src="./img/link-icon.png"/></a>
                     <%}%>
                     <%if(candidate.email){%>
-                    <a href="mailto:<%=candidate.oc_email%>?body=Dear <%=candidate.name%>,%0D%0A" target="_blank"><img class="social-icon" src="./img/email-icon.png"/></a>
+                    <a href="mailto:<%=candidate.oc_email%>?body=Dear <%=candidate.firstName + ' ' + candidate.lastName%>,%0D%0A" target="_blank"><img class="social-icon" src="./img/email-icon.png"/></a>
                     <%}%>
                     <%if(candidate.facebook_id){%>
-                    <a href="http://www.facebook.com/<%=candidate.facebook_id%>" target="_blank"><img class="social-icon" src="./img/facebook-icon.png"/></a>
+                    <a href="http://www.facebook.com/<%=candidate.facebook%>" target="_blank"><img class="social-icon" src="./img/facebook-icon.png"/></a>
                     <%}%>
                     <%if(candidate.twitter_id){%>
-                    <a href="http://www.twitter.com/<%=candidate.twitter_id%>" target="_blank"><img class="social-icon" src="./img/twitter-icon.png"/></a>
+                    <a href="http://www.twitter.com/<%=candidate.twitter%>" target="_blank"><img class="social-icon" src="./img/twitter-icon.png"/></a>
                     <%}%>
                     <%if(candidate.youtube_id){%>
-                    <a href="http://www.youtube.com/<%=candidate.youtube_id%>" target="_blank"><img class="social-icon" src="./img/youtube-icon.png"/></a>
+                    <a href="http://www.youtube.com/<%=candidate.youtube%>" target="_blank"><img class="social-icon" src="./img/youtube-icon.png"/></a>
                     <%}%>
                 </div>
             </div>
         </div>
-        <% if (role === "Incumbent") {%>
+        <% if (candidate.incumbent) {%>
             <div class="row">
                 <h4 class ="font-weight-bold">Taiwan Bills Supported: </h4>
                 <h4 class ="font-weight-bold">Questionnaire</h4>

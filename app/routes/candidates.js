@@ -6,7 +6,7 @@ var db = new sqlite3.Database('db');
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   var candidates = [];
-  var selectClause = 'SELECT name, party, chamber, state, district, incumbent FROM candidates';
+  var selectClause = 'SELECT firstName, lastName, party, chamber, state, district, incumbent, website, email, facebook, twitter, youtube FROM candidates';
   var whereClause = '';
   var params = {};
 
