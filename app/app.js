@@ -15,26 +15,28 @@ var SUNLIGHT_APIKEY = '[apikey]';
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var candidates = require('./routes/candidates');
+var sunlight_legislator = require('./modules/sunlight_legislator');
 
 var PORT = 8080;
 var app = express();
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('db');
 db.serialize(function() {
-  db.run('CREATE TABLE IF NOT EXISTS candidates(name TEXT, party TEXT, chamber TEXT, state TEXT, district INT, incumbent INT, fecId TEXT)');
+  db.run('CREATE TABLE IF NOT EXISTS candidates_v2(name TEXT, party TEXT, chamber TEXT, state TEXT, district INT, incumbent INT, fecId TEXT, email TEXT, phone TEXT, website TEXT, office TEXT, contact_form TEXT, fax TEXT, twitter_id TEXT, facebook_id TEXT, youtube_id TEXT, bioguide_id TEXT)');
 });
 
 new CronJob('0 0 * * * *', function() {
   var candidateIds = [];
-  db.each("SELECT fecId FROM candidates", function(err, row) {
-    candidateIds.push(row.fecId);
-  }, function() {
-    fetchCandidatesData('http://realtime.influenceexplorer.com/api/candidates/?format=json&page=1&apikey=' + SUNLIGHT_APIKEY, candidateIds);
-  });
+   db.each("SELECT fecId FROM candidates_v2", function(err, row) {
+      candidateIds.push(row.fecId);
+   }, function() {
+      // Attempt to fetch fecId to legislator map from Sunlight Legislator API
+      var fecIdToLegislatorMap = sunlight_legislator.getFecIdToLegislatorInfoMap();
+      fetchCandidatesData('http://realtime.influenceexplorer.com/api/candidates/?format=json&page=1&apikey=' + SUNLIGHT_APIKEY, candidateIds, fecIdToLegislatorMap);
+   });
 }, null, true, 'America/Los_Angeles');
 
-
-function fetchCandidatesData(url, existedCandidateIds) {
+function fetchCandidatesData(url, existedCandidateIds, fecIdToLegislatorMap) {
   http.get(url, (res) => {
     var jsonString = ''
     res.on('data', (d) => {
@@ -43,25 +45,12 @@ function fetchCandidatesData(url, existedCandidateIds) {
     res.on('end', () => {
       var data = JSON.parse(jsonString);
       var candidates = data.results;
-      var stmt = db.prepare('INSERT INTO candidates VALUES (?, ?, ?, ?, ?, ?, ?)');
-      for (var i = 0; i < candidates.length; i++) {
-        if (candidates[i].election_year == 2016 && existedCandidateIds.indexOf(candidates[i].fec_id) < 0) {
-          console.log('adding new candidate: ' + candidates[i].name);
-          stmt.run(
-            candidates[i].name,
-            candidates[i].party,
-            candidates[i].office,
-            candidates[i].state,
-            candidates[i].office_district,
-            candidates[i].is_incumbent,
-            candidates[i].fec_id
-          );
-        }
-      }
-      stmt.finalize();
+
+      // Attempt to populate additional information from Sunlight Legislator API into V2 table
+      insertDataToCandidateV2Table(candidates, existedCandidateIds, fecIdToLegislatorMap);
 
       if (data.next) {
-        fetchCandidatesData(data.next, existedCandidateIds);
+        fetchCandidatesData(data.next, existedCandidateIds, fecIdToLegislatorMap);
       } else {
         console.log('fetch candidates completed');
         db.close();
@@ -72,7 +61,66 @@ function fetchCandidatesData(url, existedCandidateIds) {
   });
 }
 
+/*
+  Attempt to populate additional information from Sunlight Legislator API into V2 table
+*/
+function insertDataToCandidateV2Table(candidates, existedCandidateIds, fecIdToLegislatorMap) {
+  // Insert for V2 table
+  console.log("Checking updates for V2 table...");
+  var stmt_v2 = db.prepare('INSERT INTO candidates_v2 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+  for (var i = 0; i < candidates.length; i++) {
+    if (candidates[i].election_year == 2016 && existedCandidateIds.indexOf(candidates[i].fec_id) < 0) {
+      console.log('adding new candidate for v2: ' + candidates[i].name);
 
+      // Check if we can find info from Sunlight Legislator API
+      var fecId = JSON.stringify(candidates[i].fec_id);
+      if (fecIdToLegislatorMap[fecId] != undefined) {
+        var candidateExtraInfo = fecIdToLegislatorMap[fecId];
+        stmt_v2.run(
+          candidates[i].name,
+          candidates[i].party,
+          candidates[i].office,
+          candidates[i].state,
+          candidates[i].office_district,
+          candidates[i].is_incumbent,
+          candidates[i].fec_id,
+          candidateExtraInfo.oc_email,
+          candidateExtraInfo.phone,
+          candidateExtraInfo.website,
+          candidateExtraInfo.office,
+          candidateExtraInfo.contact_form,
+          candidateExtraInfo.fax,
+          candidateExtraInfo.twitter_id,
+          candidateExtraInfo.facebook_id,
+          candidateExtraInfo.youtube_id,
+          candidateExtraInfo.bioguide_id
+        );
+      } else {
+        // Fall back to only V1 info
+        stmt_v2.run(
+          candidates[i].name,
+          candidates[i].party,
+          candidates[i].office,
+          candidates[i].state,
+          candidates[i].office_district,
+          candidates[i].is_incumbent,
+          candidates[i].fec_id,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        );
+      }
+    }
+  }
+  stmt_v2.finalize();
+}
 
 
 
