@@ -254,7 +254,10 @@ $(function() {
     var errorMsg = $('#error-msg');
 
     $('#submit-btn').click(function() {
-        // $('#main').empty();
+        // Clean up previous result if any
+        $('#senators').empty();
+        $('#representatives').empty();
+
         $('.form-control').css('border', '1px solid #ccc');
         errorMsg.hide();
 
@@ -284,9 +287,12 @@ $(function() {
 
         $loadingIcon.show();
 
-        var senatorCandidatesDeferred = getSenatorCandidates(state);
-        var repCandidatesDeferred = getRepCandidates(state, district);
-        $.when(senatorCandidatesDeferred, repCandidatesDeferred).then(function(senatorsCallback, repsCallback) {
+        var sentaorsDeferred = getSenatorCandidates(state);
+        var repsDeferred = getRepCandidates(state, district);
+
+        // Feed information fetched from DB into UI
+        $.when(sentaorsDeferred, repsDeferred).then(function(senatorsCallback, repsCallback) {
+
             var senators = senatorsCallback[0];
             var reps = repsCallback[0];
 

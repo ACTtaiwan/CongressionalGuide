@@ -7,6 +7,7 @@ var db = new sqlite3.Database('db');
 router.get('/', function(req, res, next) {
   var candidates = [];
   var selectClause = 'SELECT firstName, lastName, party, chamber, state, district, incumbent, website, email, facebook, twitter, youtube FROM candidates';
+
   var whereClause = '';
   var params = {};
 
@@ -26,10 +27,10 @@ router.get('/', function(req, res, next) {
   }
 
   db.each(selectClause + whereClause, params, function(err, row) {
-  	console.log(row);
-  	candidates.push(row);
+    console.log(row);
+    candidates.push(row);
   }, function() {
-  	res.send(candidates);
+    res.send(candidates);
   });
 });
 

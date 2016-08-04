@@ -18,6 +18,7 @@ var BILL_URL = 'http://congress.api.sunlightfoundation.com/bills?bill_id__in=sco
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var candidates = require('./routes/candidates');
+var sunlight_legislator = require('./modules/sunlight_legislator');
 
 var PORT = 8080;
 var app = express();
@@ -75,6 +76,7 @@ function fetchCandidatesData(url, existedCandidateFecIds) {
     res.on('end', () => {
       var data = JSON.parse(jsonString);
       var candidates = data.results;
+
       var stmt = db.prepare('INSERT INTO candidates (firstName, lastName, party, chamber, state, district, incumbent, fecId) ' +
         'VALUES ($firstName, $lastName, $party, $chamber, $state, $district, $incumbent, $fecId)');
       for (var i = 0; i < candidates.length; i++) {
@@ -121,66 +123,6 @@ function fetchCandidatesData(url, existedCandidateFecIds) {
 function toTitleCase(str) {
   return str.replace(/\b\w+/g,function(s){return s.charAt(0).toUpperCase() + s.substr(1).toLowerCase();});
 }
-
-
-// function fetchLegislatorsData() {
-//   db.serialize(function() {
-//     db.each("SELECT fecId FROM candidates WHERE incumbent=1", function(err, row) {
-//       http.get(LEGISTLATOR_URL + '?fec_ids=' + row.fecId + '&apikey=' + SUNLIGHT_APIKEY, (res) => {
-//         var jsonString = '';
-//         res.on('data', (d) =>  {
-//           jsonString += d;
-//         });
-//         res.on('end', () => {
-//           var data = JSON.parse(jsonString);
-//           var legislator = data.results[0];
-//           if (legislator) {
-//             db.run("UPDATE candidates SET bioguideId = $bioguideId, email = $email, facebook = $facebook, twitter = $twitter, website = $website, youtube = $youtube WHERE fecId = $fecId", {
-//               $bioguideId: legislator.bioguide_id,
-//               $email: legislator.oc_email,
-//               $facebook: legislator.facebook_id,
-//               $twitter: legislator.twitter_id,
-//               $website: legislator.website,
-//               $youtube: legislator.youtube_id,
-//               $fecId: row.fecId
-//             });
-//           }
-//         });
-//       }).on('error', (e) => {
-//         console.log(`Got error: ${e.message}`);
-//       });
-//     });
-//   });
-// }
-// fetchLegislatorsData();
-// 
-// function populateBillsTable() {
-//   http.get(BILL_URL + '&apikey=' + SUNLIGHT_APIKEY, (res) => {
-//     var jsonString = '';
-//     res.on('data', (d) => {
-//       jsonString += d;
-//     });
-//     res.on('end', () => {
-//       var data = JSON.parse(jsonString);
-//       var bills = data.results;
-//       var stmt = db.prepare('INSERT INTO bills (billId, officialTitle, sponsorId, url) ' +
-//         'VALUES ($billId, $officialTitle, $sponsorId, $url)');
-//       for (var i = 0; i < bills.length; i++) {
-//         stmt.run({
-//           $billId: bills[i].bill_id,
-//           $officialTitle: bills[i].official_title,
-//           $sponsorId: bills[i].sponsor_id,
-//           $url: bills[i].urls.congress
-//         });
-//       }
-//       stmt.finalize();
-//     });
-//   }).on('error', (e) => {
-//     console.log(`Got error: ${e.message}`);
-//   });
-// }
-// populateBillsTable();
-
 
 
 // view engine setup
