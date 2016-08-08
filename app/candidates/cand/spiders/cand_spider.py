@@ -41,6 +41,8 @@ class CandSpider(scrapy.Spider):
             # e.g. u'/Pepper_Snyder' 
             ccurl = href.xpath('following-sibling::a/@href').extract()
             if len(ccurl) > 0:
+                print 'multiple candidates url found: '
+                print ccurl
                 curl = ccurl[0]
             else:
                 curl = ""
@@ -56,11 +58,13 @@ class CandSpider(scrapy.Spider):
             
             # get item from upper level 
             item = response.meta['item']
+            # TODO bad data overwrite good one
+            # if 'name' not in item or len(item['name'])!= 0:
             item['name'] = name
             item['url'] = cand_urls
             item['party'] = party
-            request = scrapy.Request(cand_urls, callback=self.parse_cand) 
-            request.meta['item'] = item
+            request = scrapy.Request(cand_urls, callback=self.parse_cand, meta={'item':item}) 
+            #request.meta['item'] = item
 
             print "successfully parsed " + str(i) + " persons"
             yield request
