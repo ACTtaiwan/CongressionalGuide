@@ -1,0 +1,4 @@
+To run scrapy:
+scrapy crawl cand -o items.json
+ 
+Use -o <filename> to output the parsed data to JSON file.
