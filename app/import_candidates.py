@@ -1,3 +1,4 @@
+#!/usr/bin/python 
 import sqlite3, json, os
 from collections import defaultdict
 
@@ -61,7 +62,7 @@ def getStateAbbr(s):
     print 'key ' + s + ' not found!'
     return None
 
-dbpath = '/Users/Mark/Google Drive/act/CongressionalGuide/app/db'
+dbpath = '/root/CongressionalGuide/app/db'
 if not (dbpath and os.path.isfile(dbpath)):
   print 'db file not found'
   exit() 
@@ -71,10 +72,10 @@ try:
   c = db.cursor()
 except sqlite3.Error:
   print 'sqlite3 error'
-  c.close()
+  db.close()
 
 
-jsonpath = '/Users/Mark/Google Drive/act/CongressionalGuide/app/candidates/items3.json'
+jsonpath = '/root/CongressionalGuide/app/candidates/item1.json'
 if not (jsonpath and os.path.isfile(jsonpath)):
   print 'json file not found'
   exit()
@@ -82,8 +83,8 @@ if not (jsonpath and os.path.isfile(jsonpath)):
 congressman = json.load(open(jsonpath))
 
 
-# Existing schema, total of 18 columns  TODO: make sure we udpate schema 'img_src'
-# alter table candidates add column src_img TEXT;
+# Existing schema, total of 18 columns  
+# alter table candidates add column img_src TEXT;
 
 # column = (firstName, lastName , prefix , suffix , party , chamber , state , district , incumbent , bioguideId , fecId , note , website , email , facebook , twitter , youtube , img_src)
 
@@ -95,6 +96,8 @@ update_query = 'UPDATE candidates SET img_src = ?, facebook = ?, twitter = ?, we
 insert_query = 'INSERT INTO candidates VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
 
 #TODO: error check for bad input (k,v) range out of bound
+ns = set()
+
 for human in congressman:
   skip = False
 
@@ -117,11 +120,17 @@ for human in congressman:
   youtube=(None,)
   img_src=(None,)
 
+  mesg=''
   for k,v in human.iteritems():
-    print '(k,v)=('+k+' ,'+v+ ')'
+    mesg += '(k,v)=('+k+' ,'+v+ ')\n'
     if k == 'name':
+      if v in ns:
+        print 'dup'
+        skip = True
+        break
+      ns.add(v)
       if len(v.split())!=2:
-        print '### bad name ###'
+        print 'bad name, skip it'
         skip = True 
       else:
         firstName = v.split()[0],
@@ -142,29 +151,29 @@ for human in congressman:
       state = getStateAbbr(v),
     elif k == 'pic':
       img_src = v,
-     
+
   if skip:
     print '[skip]'
     continue
+  print mesg
 
   insert_values = (firstName + lastName + prefix + suffix  + party + chamber + state + district + incumbent + bioguideId + fecId + note + website + email + facebook + twitter + youtube + img_src)
-  print 'insert_values: '
-  print insert_values
 
   update_values = (img_src + facebook + twitter + website + lastName + firstName)
-  print 'update_values: '
-  print update_values
 
-  c.execute('SELECT count(*) FROM candidates where firstName == ? and lastName == ?;', firstName+lastName)
-  found = c.fetchone()[0]>0
-  if found:
-    print 'update'
+  row_count = c.execute('SELECT count(*) FROM candidates where firstName = ? and lastName = ?;', firstName+lastName)
+  if row_count > 0:
+    print 'update_values: '
+    print update_values
     c.execute(update_query, update_values)
   else:
-    print 'insert'
+    print 'insert_values: '
+    print insert_values
     c.execute(insert_query, insert_values)
   print '[OK]'
 
-print '[done]'
-c.close()
+
+print 'Total updates: ' + str(len(ns))
+db.commit()
+db.close()
 
