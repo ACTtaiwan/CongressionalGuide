@@ -202,6 +202,7 @@
     <script type="text/template" id="candidate-tpl">
         <div class="row">
             <div class="col-xs-6">
+		<% if(candidate.img_src === null) candidate.img_src =  "./img/default-img.png"%>
                 <img class="img-responsive" src="<%=candidate.img_src%>"/>
             </div>
             <div class="col-xs-6">

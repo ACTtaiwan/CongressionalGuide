@@ -289,6 +289,9 @@ $(function() {
 
         var sentaorsDeferred = getSenatorCandidates(state);
         var repsDeferred = getRepCandidates(state, district);
+	//Clear old data
+	$("#senator_row").html("");
+	$("#reps_row").html("");
 
         // Feed information fetched from DB into UI
         $.when(sentaorsDeferred, repsDeferred).then(function(senatorsCallback, repsCallback) {
