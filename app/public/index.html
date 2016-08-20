@@ -218,29 +218,46 @@
                 </h4>
                 <div>
                     <%if(candidate.website){%>
-                    <a href="<%=candidate.website%>" target="_blank"><img class="social-icon" src="./img/link-icon.png"/></a>
+                    <a href="<%=candidate.website%>" target="_blank"><img class="social-icon" src="./img/colored/link.png"/></a>
                     <%}%>
                     <%if(candidate.email){%>
-                    <a href="mailto:<%=candidate.oc_email%>?body=Dear <%=candidate.firstName + ' ' + candidate.lastName%>,%0D%0A" target="_blank"><img class="social-icon" src="./img/email-icon.png"/></a>
+                    <a href="mailto:<%=candidate.oc_email%>?body=Dear <%=candidate.firstName + ' ' + candidate.lastName%>,%0D%0A" target="_blank"><img class="social-icon" src="./img/colored/email.png"/></a>
                     <%}%>
                     <%if(candidate.facebook){%>
-                    <a href="http://www.facebook.com/<%=candidate.facebook%>" target="_blank"><img class="social-icon" src="./img/facebook-icon.png"/></a>
+                    <a href="http://www.facebook.com/<%=candidate.facebook%>" target="_blank"><img class="social-icon" src="./img/colored/facebook.png"/></a>
                     <%}%>
                     <%if(candidate.twitter){%>
-                    <a href="http://www.twitter.com/<%=candidate.twitter%>" target="_blank"><img class="social-icon" src="./img/twitter-icon.png"/></a>
+                    <a href="http://www.twitter.com/<%=candidate.twitter%>" target="_blank"><img class="social-icon" src="./img/colored/twitter.png"/></a>
                     <%}%>
                     <%if(candidate.youtube){%>
-                    <a href="http://www.youtube.com/<%=candidate.youtube%>" target="_blank"><img class="social-icon" src="./img/youtube-icon.png"/></a>
+                    <a href="http://www.youtube.com/<%=candidate.youtube%>" target="_blank"><img class="social-icon" src="./img/colored/youtube.png"/></a>
                     <%}%>
                 </div>
             </div>
         </div>
-        <% if (candidate.incumbent) {%>
             <div class="row">
-                <h4 class ="font-weight-bold">Taiwan Bills Supported: </h4>
-                <h4 class ="font-weight-bold">Questionnaire</h4>
+        	<% if (candidate.incumbent) {%>
+                	<div id="supportedbill">
+			<h4 class ="font-weight-bold">Taiwan Bills Supported: </h4>
+			</div>
+        	<% } %>
+		<!-- TODO: If candidate have response, show the response -->
+
+			<div id="questionnaire" class="questionnaire-box">
+	                	<h4 class ="font-weight-bold">Questionnaire</h4	>
+				<p>Ask the <font color="red">candidate</font> to answer the questionnaire on their support for Taiwan. <a href="#">See the questionnaire.</a></p>
+			<table class="questionnaire-table">
+				<tr>
+					<%if(candidate.twitter){%>
+						<td><a href="http://www.twitter.com/<%=candidate.twitter%>" target="_blank"><img class="social-icon questionnaire-button" src="./img/colored/twitter.png"/>Ask via Twitter</a></td>
+					<%}%>
+					 <%if(candidate.email){%>
+						<td> <a href="mailto:<%=candidate.oc_email%>?body=Dear <%=candidate.firstName + ' ' + candidate.lastName%>,%0D%0A" target="_blank"><img class="social-icon questionnaire-button" src="./img/colored/email.png"/>Ask via email</a></td>
+					<%}%>
+				</tr>
+			</table>
+			</div>
             </div>
-        <% } %>
     </script>
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
