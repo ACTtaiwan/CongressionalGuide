@@ -223,13 +223,13 @@
                     <%if(candidate.email){%>
                     <a href="mailto:<%=candidate.oc_email%>?body=Dear <%=candidate.firstName + ' ' + candidate.lastName%>,%0D%0A" target="_blank"><img class="social-icon" src="./img/email-icon.png"/></a>
                     <%}%>
-                    <%if(candidate.facebook_id){%>
+                    <%if(candidate.facebook){%>
                     <a href="http://www.facebook.com/<%=candidate.facebook%>" target="_blank"><img class="social-icon" src="./img/facebook-icon.png"/></a>
                     <%}%>
-                    <%if(candidate.twitter_id){%>
+                    <%if(candidate.twitter){%>
                     <a href="http://www.twitter.com/<%=candidate.twitter%>" target="_blank"><img class="social-icon" src="./img/twitter-icon.png"/></a>
                     <%}%>
-                    <%if(candidate.youtube_id){%>
+                    <%if(candidate.youtube){%>
                     <a href="http://www.youtube.com/<%=candidate.youtube%>" target="_blank"><img class="social-icon" src="./img/youtube-icon.png"/></a>
                     <%}%>
                 </div>
