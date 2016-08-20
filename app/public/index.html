@@ -218,29 +218,47 @@
                 </h4>
                 <div>
                     <%if(candidate.website){%>
-                    <a href="<%=candidate.website%>" target="_blank"><img class="social-icon" src="./img/link-icon.png"/></a>
+                    <a href="<%=candidate.website%>" target="_blank"><img class="social-icon" src="./img/colored/link.png"/></a>
                     <%}%>
                     <%if(candidate.email){%>
-                    <a href="mailto:<%=candidate.oc_email%>?body=Dear <%=candidate.firstName + ' ' + candidate.lastName%>,%0D%0A" target="_blank"><img class="social-icon" src="./img/email-icon.png"/></a>
+                    <a href="mailto:<%=candidate.email%>?body=Dear <%=candidate.firstName + ' ' + candidate.lastName%>,%0D%0A" target="_blank"><img class="social-icon" src="./img/colored/email.png"/></a>
                     <%}%>
                     <%if(candidate.facebook){%>
-                    <a href="http://www.facebook.com/<%=candidate.facebook%>" target="_blank"><img class="social-icon" src="./img/facebook-icon.png"/></a>
+                    <a href="http://www.facebook.com/<%=candidate.facebook%>" target="_blank"><img class="social-icon" src="./img/colored/facebook.png"/></a>
                     <%}%>
                     <%if(candidate.twitter){%>
-                    <a href="http://www.twitter.com/<%=candidate.twitter%>" target="_blank"><img class="social-icon" src="./img/twitter-icon.png"/></a>
+                    <a href="http://www.twitter.com/<%=candidate.twitter%>" target="_blank"><img class="social-icon" src="./img/colored/twitter.png"/></a>
                     <%}%>
                     <%if(candidate.youtube){%>
-                    <a href="http://www.youtube.com/<%=candidate.youtube%>" target="_blank"><img class="social-icon" src="./img/youtube-icon.png"/></a>
+                    <a href="http://www.youtube.com/<%=candidate.youtube%>" target="_blank"><img class="social-icon" src="./img/colored/youtube.png"/></a>
                     <%}%>
                 </div>
             </div>
         </div>
-        <% if (candidate.incumbent) {%>
             <div class="row">
-                <h4 class ="font-weight-bold">Taiwan Bills Supported: </h4>
-                <h4 class ="font-weight-bold">Questionnaire</h4>
+        	<% if (candidate.incumbent) {%>
+                	<div id="supportedbill">
+			<h4 class ="font-weight-bold">Taiwan Bills Supported: </h4>
+			</div>
+        	<% } %>
+		<!-- TODO: If candidate have response, show the response -->
+
+			<div id="questionnaire" class="questionnaire-box">
+	                	<h4 class ="font-weight-bold">Questionnaire</h4	>
+				<p>Ask the <font color="red">candidate</font> to answer the questionnaire on their support for Taiwan. <a href="#">See the questionnaire.</a></p>
+			<table class="questionnaire-table">
+				<tr>
+					<%if(candidate.twitter){%>
+						<td><a href="http://www.twitter.com/intent/tweet?screen_name=<%=candidate.twitter%>&text=Will you support our important trade and security ally Taiwan? Please answer the questions at http://ACTtaiwan.org/q" target="_blank"><img class="social-icon questionnaire-button" src="./img/colored/twitter.png"/>Ask via Twitter</a></td>
+					<%}%>
+					 <%if(candidate.email){%>
+						<td><a href="mailto:<%=candidate.email%>?subject=Will you support our important trade and security ally Taiwan? Please let us know your stand&body=Dear <%=candidate.firstName%> <%=candidate.lastName%>,%0D%0A%0D%0AAs you may know, Taiwan is a very important partner and ally to the U.S. In 2015, the U.S. exported $25.86 billion to Taiwan, worth over 150,000 jobs. Taiwan is also a key part of the Asia-Pacific security sphere; if Communist China were to take over Taiwan, Beijing would finally have access to a blue-water port to launch its submarines undetected into the Pacific.%0D%0A%0D%0AWe are very concerned that the U.S. continues to work in strengthening the enduring bonds between the American and Taiwanese peoples. As with many in my community, we want our elected representatives to support self-determination and the protection of democracy for Taiwan, as these will protect American interests in Asia.%0D%0A%0D%0APlease reach out to the local Taiwanese American community and those concerned with America's relationship with Taiwan by completing the American Citizens for Taiwan Candidate Questionnaire below. It will be posted publicly at voterguide.ACTtaiwan.org and widely distributed via the web, social media, mailing lists, and at public events.%0D%0APlease respond to the questions below, and then send the completed questionnaire to American Citizens for Taiwan <legislativerelations@acttaiwan.org>.%0D%0AThank you for your consideration of our request.%0D%0A%0D%0AAmerican Citizens for Taiwan Candidate Questionnaire%0D%0A1.	If you are not already a member of the Taiwan Caucus, will you join?%0D%0A2.	In this period of economic difficulty, exports and the jobs they provide are essential. Will you support pushing forward with a trade agreement with Taiwan that could increase U.S. exports?%0D%0A3.	As laid out in the Taiwan Relations Act [United States Code, Title 22, Chapter 48, Section 3301], the human rights of Taiwanese are a key interest of the United States. Will you commit to publicly speaking out against threats to Taiwanese human rights, as well as supporting legislation strengthening the U.S. commitment to such?%0D%0A4.	The Taiwan Relations Act states that any determination of Taiwan's future by other than peaceful means would threaten the peace and security of the Western Pacific area; with this commitment to human rights, the only acceptable method is Taiwanese self-determination with no external compulsion or external interference. Will you commit to a public stance that Taiwan's future can only be determined fairly by all the residents of Taiwan via plebiscite, where the issue of change in status is clearly laid out?%0D%0A5.	In order to protect Taiwan's democracy, it must have a credible deterrent from threats outside its borders. The Taiwan Relations Act clearly lays out in Section 3302 the policy of making available weapons to enable Taiwan to maintain a sufficient self-defense capability. Defense experts' opinions overwhelmingly state that Taiwan's current defense status is not sufficient for self-defense. Will you support additional weapons sales to Taiwan in order to bring credible deterrence back into line with the threat from the PRC military?" target="_blank"><img class="social-icon questionnaire-button" src="./img/colored/email.png"/>Ask via email</a>
+</td>
+					<%}%>
+				</tr>
+			</table>
+			</div>
             </div>
-        <% } %>
     </script>
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>

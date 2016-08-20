@@ -189,3 +189,22 @@ h1{
 @media (max-width: 768){
 }
 
+.questionnaire-box{
+	border-width: 1px;
+        border-style: solid;
+        padding-left: 24px;
+        border-color: #a4a4ed;
+        border-radius: 4px 4px 4px 4px;
+        margin-top: 25px;
+	padding-bottom: 10px;
+}
+
+.questionnaire-table{
+	margin-left: auto;
+	margin-right: auto;
+	width: 100%;
+}
+
+.questionnaire-button{
+	margin-right: 10px;
+}
