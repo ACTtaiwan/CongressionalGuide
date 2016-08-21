@@ -16,3 +16,6 @@ To find out more, please check out the [Congressional Guide wiki](https://github
 
 ## Getting Started
 To get a local environment up and running, start with the `app/README.md`
+
+# Throughput Graph
+[![Throughput Graph](https://graphs.waffle.io/ACTtaiwan/CongressionalGuide/throughput.svg)](https://waffle.io/ACTtaiwan/CongressionalGuide/metrics/throughput)
