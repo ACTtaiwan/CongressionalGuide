@@ -5,20 +5,22 @@ from cand.items import CandItem
 # Parsing logic:
 #1 search all Independent/Libertarian/Republican/Democratic node and following the node to the candidate's page
 #2 get all primary candidate's href link, and find it's district/name information
-# TODO remove duplicate candidate
 
+
+# TODO remove duplicate candidate
 class CandSpider(scrapy.Spider):
     name = "cand"
     allowed_domains = ["ballotpedia.org"]
     start_urls = ["https://ballotpedia.org/United_States_Congress_elections,_2016"]
 
     def parse(self, response):
-				# grep 50 state's info
+	# grep 50 state's info
         for i, href in enumerate(response.xpath('//table[@class="infobox"]/descendant::node()/a[contains(@href, "United_States_House_of_Representatives_elections_in")]/@href').extract()):
             print "State==>" #/United_States_House_of_Representatives_elections_in_Louisiana,_2016
             state = href.split(',')[0].split('_')[-1]
             print state
             url = response.urljoin(href)
+            print url
 
             item = CandItem()  
             item['state'] = state
@@ -26,7 +28,7 @@ class CandSpider(scrapy.Spider):
             request =  scrapy.Request(url, callback=self.parse_states)
             request.meta['item'] = item
 
-            print "successfully parsed " + str(i) + " states"
+            print "successfully parsed " + str(i+1) + " states"
             yield request
 
     # parse state info 
