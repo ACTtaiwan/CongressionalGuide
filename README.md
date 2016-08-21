@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/ACTtaiwan/CongressionalGuide.png?label=ready&title=Ready)](https://waffle.io/ACTtaiwan/CongressionalGuide)
 # ACT U.S. Congressional Guide
 Provides code to allow users to look up members and candidates for the U.S. Congress to see if they support certain legislation or issues.
 
