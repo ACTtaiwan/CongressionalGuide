@@ -7,6 +7,7 @@
 
 import scrapy
 
+#CREATE TABLE candidates (firstName TEXT, lastName TEXT, prefix TEXT, suffix TEXT, party TEXT, chamber TEXT, state TEXT, district INT, incumbent BOOLEAN, bioguideId TEXT, fecId TEXT, note BLOB, website TEXT, email TEXT, facebook TEXT, twitter TEXT, youtube TEXT, img_src TEXT);
 
 class CandItem(scrapy.Item):
     name = scrapy.Field()
@@ -18,3 +19,7 @@ class CandItem(scrapy.Item):
     twtr = scrapy.Field()
     camp = scrapy.Field()
     state = scrapy.Field()
+    chamber = scrapy.Field()
+    incumbent = scrapy.Field()
+    youtube = scrapy.Field()
+    email = scrapy.Field()
