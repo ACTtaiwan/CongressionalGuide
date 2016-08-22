@@ -1,10 +1,15 @@
-This Docker container is based on the [Official Node JS Docker container](https://hub.docker.com/_/node/). Before doing anything here, we recommend you have gone through the [Dockerizing a Node.js web app tutorial](https://nodejs.org/en/docs/guides/nodejs-docker-webapp/).
+Start by executing the below command in the root Congressional Guide project folder.
+`$ docker-compose up`
+
+*Below is WIP*
+
+This `app` Docker container is based on the [Official Node JS Docker container](https://hub.docker.com/_/node/). Before doing anything here, we recommend you have gone through the [Dockerizing a Node.js web app tutorial](https://nodejs.org/en/docs/guides/nodejs-docker-webapp/).
 
 ## Build the Docker Node.js image 
 `$ docker build -t acttaiwan/cgapp .`
 
 ## Run the Docker Container
-`$ docker run -it --rm -p 49160:3000 --name cgapp acttaiwan/cgapp`
+`$ docker run -it --rm -p 49160:3000 -v "$PWD"/db:/opt/db --name cgapp acttaiwan/cgapp`
 
 This will drop you into the running container so you can observe the log. To quit the container, `control-c`.
 
@@ -14,7 +19,7 @@ Access the running webpage at `http://localhost:49160/`
 
 ### Local Directory
 If you are running locally where you are changing and working with the code, run the container via:
-`$ docker run -it --rm -p 49160:3000 -v "$PWD":/opt/app acttaiwan/cgapp /bin/bash`
+`$ docker run -it --rm -p 49160:3000 -v ../db:/opt/d -v "$PWD":/opt/app acttaiwan/cgapp /bin/bash`
 
 * The -v option mounts the current directory you are in to the container, any changes made in this directory will immediately be available.
 * You will be dropped into the `/opt/app` directory where you can run commands. Changes that are then made to this directly will all change the directly locally.
@@ -24,3 +29,6 @@ If you are running locally where you are changing and working with the code, run
 ## Interaction with the Container or Code
 Access the running acttaiwan/cgapp Container bash shell to interact live with both data and running processes
 `$ docker exec -it cgapp /bin/bash`
+
+## SQLite DB
+The SQLite DB is mounted inside the container from `/db/db.sqlite3`. You can interact directly with the DB on your local drive and those changes should show in the app.
