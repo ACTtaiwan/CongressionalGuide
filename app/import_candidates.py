@@ -67,7 +67,7 @@ def getStateAbbr(s):
     print 'key ' + s + ' not found!'
     return None
 
-dbpath = '/root/CongressionalGuide/db/db.sqlite3'
+dbpath = '/root/CongressionalGuide/app/db'
 if not (dbpath and os.path.isfile(dbpath)):
   print 'db file not found'
   exit() 
@@ -138,7 +138,7 @@ for human in congressman:
       website = v,
     elif k == 'twtr':
       tv = v[v.find('twitter.com')+len('twitter.com')+1:]
-      twitter = tv[:tv.find('/')],
+      twitter = tv[:tv.find('/')].replace('@',''),
     elif k == 'fb':
       facebook = v,
     elif k == 'state':

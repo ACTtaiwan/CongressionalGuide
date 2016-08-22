@@ -51,6 +51,7 @@ db.serialize(function() {
   ')');
 
   db.run('CREATE TABLE IF NOT EXISTS cosponsors_bills(' +
+    'cid INTEGER PRIMARY KEY ASC, ' +
     'cosponsorId TEXT REFERENCES candidates (bioguideId), ' +
     'billId TEXT REFERENCES bills (billId)' +
   ')');
