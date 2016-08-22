@@ -1,8 +1,13 @@
 #!/usr/bin/python 
 import sqlite3, json, os
+import logging, sys
 from collections import defaultdict
 
-# Dump candidates information from items.json into our sqlite3 database
+#
+# This script dump candidates information from filename.json into our sqlite3 database
+#
+
+logging.basicConfig(stream=sys.stderr,level=logging.DEBUG)
 
 def getStateAbbr(s):
   try:
@@ -75,7 +80,7 @@ except sqlite3.Error:
   db.close()
 
 
-jsonpath = '/root/CongressionalGuide/app/candidates/item1.json'
+jsonpath = '/root/CongressionalGuide/app/candidates/senate.json'
 if not (jsonpath and os.path.isfile(jsonpath)):
   print 'json file not found'
   exit()
@@ -92,21 +97,18 @@ congressman = json.load(open(jsonpath))
 # if exists, update_query
 # else insert_query
 
-update_query = 'UPDATE candidates SET img_src = ?, facebook = ?, twitter = ?, website = ? where lastName = ? and firstName = ?'
+update_query = 'UPDATE candidates SET img_src = ?, facebook = ?, twitter = ?, website = ?, youtube = ? where firstName like ? and lastName like ? and state = ? and district = ?'
 insert_query = 'INSERT INTO candidates VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
 
 #TODO: error check for bad input (k,v) range out of bound
-ns = set()
 
 for human in congressman:
-  skip = False
-
   firstName=(None,)
   lastName=(None,)
   prefix=(None,)
   suffix=(None,)
   party=(None,)
-  chamber=('H',)
+  chamber=(None,)
   state=(None,)
   district=(None,)
   incumbent=(False,)
@@ -124,17 +126,8 @@ for human in congressman:
   for k,v in human.iteritems():
     mesg += '(k,v)=('+k+' ,'+v+ ')\n'
     if k == 'name':
-      if v in ns:
-        print 'dup'
-        skip = True
-        break
-      ns.add(v)
-      if len(v.split())!=2:
-        print 'bad name, skip it'
-        skip = True 
-      else:
-        firstName = v.split()[0],
-        lastName = v.split()[1], 
+      firstName = v.split()[0],
+      lastName = v.split()[-1], 
     elif k == 'party':
       party = v[0],
     elif k == 'dist':
@@ -144,36 +137,37 @@ for human in congressman:
     elif k == 'camp':
       website = v,
     elif k == 'twtr':
-      twitter = v,
+      tv = v[v.find('twitter.com')+len('twitter.com')+1:]
+      twitter = tv[:tv.find('/')],
     elif k == 'fb':
       facebook = v,
     elif k == 'state':
       state = getStateAbbr(v),
     elif k == 'pic':
       img_src = v,
+    elif k == 'chamber':
+      chamber = v,
+    elif k == 'youtube':
+      youtube = v,
 
-  if skip:
-    print '[skip]'
-    continue
-  print mesg
+  logging.debug(mesg)
+  match_firstName = '%'+firstName[0]+'%',
+  match_lastName = '%'+lastName[0]+'%',
+  insert_values = (firstName + lastName + prefix + suffix + party + chamber + state + district + incumbent + bioguideId + fecId + note + website + email + facebook + twitter + youtube + img_src)
+  update_values = (img_src + facebook + twitter + website + youtube + match_firstName + match_lastName + state + district)
 
-  insert_values = (firstName + lastName + prefix + suffix  + party + chamber + state + district + incumbent + bioguideId + fecId + note + website + email + facebook + twitter + youtube + img_src)
-
-  update_values = (img_src + facebook + twitter + website + lastName + firstName)
-
-  row_count = c.execute('SELECT count(*) FROM candidates where firstName = ? and lastName = ?;', firstName+lastName)
-  if row_count > 0:
-    print 'update_values: '
-    print update_values
+  # Match with existing Sunlight data: lastName, first word of firstName, state and district
+  c.execute('SELECT count(*) FROM candidates where firstName like ? and lastName like ? and state = ? and district = ?;', match_firstName + match_lastName + state + district)
+  obj = c.fetchone()
+  if obj[0]:
+    logging.info('update_values: %s', update_values)
     c.execute(update_query, update_values)
   else:
-    print 'insert_values: '
-    print insert_values
+    logging.info('insert_values: %s', insert_values)
     c.execute(insert_query, insert_values)
-  print '[OK]'
+  logging.info('[OK]\n\n')
 
 
-print 'Total updates: ' + str(len(ns))
 db.commit()
 db.close()
 
