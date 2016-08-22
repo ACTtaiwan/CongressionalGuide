@@ -2,11 +2,13 @@ import scrapy
 import logging, sys
 from cand.items import CandItem
 
-# NY senators have multiple party
-# https://ballotpedia.org/United_States_Senate_election_in_New_York,_2016
+# This script contains spiders to crawl different page from ballotpedia.org
 # Spider1 parse out state links
 # Spider2 parse the majority of candidate
 # Spider4 pase FL, NH as they have different html layout
+
+# Note: NY senators have multiple party
+# https://ballotpedia.org/United_States_Senate_election_in_New_York,_2016
 
 class SenateSpider1(scrapy.Spider):
     name = "senate1"
@@ -59,7 +61,8 @@ class SenateSpider2(scrapy.Spider):
             logging.info('pic: %s', p.extract())
             break 
 
-        # no district info for senators
+        # Put district number 0 for senators so that later we use this to match sunlight's candidate data
+        item['dist'] = '0'
         #logging.debug('grab district...')
         #for dist in response.xpath('//a[contains(@href, "Congressional_District")]/text()'):
         #    d = dist.extract().split()[1]
@@ -71,7 +74,7 @@ class SenateSpider2(scrapy.Spider):
         logging.debug('grab state...')
         for l in response.xpath('//*[@id="bodyContent"]/a[contains(@href, "U.S._Senate_elections") or contains(@href, "United_States_Senate")] | //*[@id="bodyContent"]/p/a[contains(@href, "U.S._Senate_elections")]'):# this line is for you Patrick Murphy!
             logging.debug('selector, node before state: %s', l)
-            h = l.xpath('following-sibling::a/@href').extract()[0][1:]
+            h = l.xpath('following-sibling::a/@href').extract()[0][1:].replace('_',' ')
             logging.info('state: %s', h)
             item['state'] = h
             break
