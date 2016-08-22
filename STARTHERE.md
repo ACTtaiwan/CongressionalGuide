@@ -1,6 +1,10 @@
 Start by executing the below command in the root Congressional Guide project folder.
 `$ docker-compose up`
 
+to rebuild a container
+
+`$ docker-compose build`
+
 *Below is WIP*
 
 This `app` Docker container is based on the [Official Node JS Docker container](https://hub.docker.com/_/node/). Before doing anything here, we recommend you have gone through the [Dockerizing a Node.js web app tutorial](https://nodejs.org/en/docs/guides/nodejs-docker-webapp/).
