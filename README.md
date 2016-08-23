@@ -16,7 +16,7 @@ To find out more, please check out the [Congressional Guide wiki](https://github
 * For [npm](https://www.npmjs.com) packages used, see the `app/package.json` file.
 
 ## Getting Started
-* To get a local environment up and running, start with the `app/README.md`
+* To get a local environment up and running, start [here](STARTHERE.md)
 * See our issues Kanban board on [waffle.io](https://waffle.io/ACTtaiwan/CongressionalGuide)
 
 # Throughput Graph

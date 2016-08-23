@@ -23,7 +23,7 @@ var sunlight_legislator = require('./modules/sunlight_legislator');
 var PORT = 8080;
 var app = express();
 var sqlite3 = require('sqlite3').verbose();
-var db = new sqlite3.Database('db');
+var db = new sqlite3.Database('../db/db.sqlite3');
 db.serialize(function() {
   db.run('CREATE TABLE IF NOT EXISTS candidates(' +
     'firstName TEXT, ' +
@@ -51,6 +51,7 @@ db.serialize(function() {
   ')');
 
   db.run('CREATE TABLE IF NOT EXISTS cosponsors_bills(' +
+    'cid INTEGER PRIMARY KEY ASC, ' +
     'cosponsorId TEXT REFERENCES candidates (bioguideId), ' +
     'billId TEXT REFERENCES bills (billId)' +
   ')');
