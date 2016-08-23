@@ -12,18 +12,21 @@ var CronJob = require('cron').CronJob;
 
 var SUNLIGHT_APIKEY = 'd9eeb169a7224fe28ae0f32aca0dc93e';
 var LEGISTLATOR_URL = 'http://congress.api.sunlightfoundation.com/legislators';
-var BILL_URL = 'http://congress.api.sunlightfoundation.com/bills?bill_id__in=sconres38-114|hconres88-114|s2426-114|hr4154-114|hr1853-114|hconres76-114|s1683-113|hres494-113|hjres109-113|sjres31-113|hconres55-113|hconres46-113|hr1151-113|s579-113|hres185-113|hconres29-113|s12-113|hr419-113&fields=official_title,urls.congress,sponsor_id,cosponsor_ids';
+var BILL_URL = 'http://congress.api.sunlightfoundation.com/bills?fields=official_title,urls.congress,sponsor_id,cosponsor_ids';
 
+var BILL_RANGE = '&bill_id__in=sconres38-114|hconres88-114|s2426-114|hr4154-114|hr1853-114|hconres76-114|s1683-113|hres494-113|hjres109-113|sjres31-113|hconres55-113|hconres46-113|hr1151-113|s579-113|hres185-113|hconres29-113|s12-113|hr419-113';
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var candidates = require('./routes/candidates');
+var bills = require('./routes/bills');
 var sunlight_legislator = require('./modules/sunlight_legislator');
+
 
 var PORT = 8080;
 var app = express();
 var sqlite3 = require('sqlite3').verbose();
-var db = new sqlite3.Database('../db/db.sqlite3');
+var db = new sqlite3.Database('db');
 db.serialize(function() {
   db.run('CREATE TABLE IF NOT EXISTS candidates(' +
     'firstName TEXT, ' +
@@ -51,7 +54,7 @@ db.serialize(function() {
   ')');
 
   db.run('CREATE TABLE IF NOT EXISTS cosponsors_bills(' +
-    'cid INTEGER PRIMARY KEY ASC, ' +
+    'cid INTEGER PRIMARY KEY ASC, ' + 
     'cosponsorId TEXT REFERENCES candidates (bioguideId), ' +
     'billId TEXT REFERENCES bills (billId)' +
   ')');
@@ -59,14 +62,83 @@ db.serialize(function() {
 
 new CronJob('0 0 * * * *', function() {
   var candidateFecIds = [];
+  var candidateBioguideIds =[];
   // fecId should be a good unique ID for candidate
-  db.each("SELECT fecId FROM candidates", function(err, row) {
+  db.each("SELECT fecId, bioguideId FROM candidates", function(err, row) {
     candidateFecIds.push(row.fecId);
+    candidateBioguideIds.push(row.bioguideId);
   }, function() {
-    fetchCandidatesData('http://realtime.influenceexplorer.com/api/candidates/?format=json&page=1&apikey=' + SUNLIGHT_APIKEY, candidateFecIds);
+  //  fetchCandidatesData('http://realtime.influenceexplorer.com/api/candidates/?format=json&page=1&apikey=' + SUNLIGHT_APIKEY, candidateFecIds);
+//    fetchBillsData(BILL_URL + BILL_RANGE + '&apikey=' + SUNLIGHT_APIKEY, candidateBioguideIds);
   });
 }, null, true, 'America/Los_Angeles');
 
+
+
+function fetchBillsData(url, candidateBioguideIds){
+
+//	db.run('UPDATE candidates SET bills="ccc" WHERE district=1');
+	console.log(db.run('UPDATE candidates SET bills="ggg" WHERE district=1;'));
+/*
+  http.get(url, (res) => {
+    var jsonString = '';  
+    res.on('data', (d) => {
+      jsonString += d;
+    });
+    res.on('end', () => {
+      var data = JSON.parse(jsonString);
+      var bills = data.results;
+      
+      var stmt = db.prepare('UPDATE candidates ' +
+	'SET bills = $bills ' + 
+	'WHERE bioguideId = $bioguideId'
+	);
+
+      var bill_list = [];
+      for (var i = 0; i < bills.length; i++) {
+	var isFind = false;
+	var index = candidateBioguideIds.indexOf(bills[i].sponsor_id);
+	
+        if (index >= 0){
+		bill_list.push(bills[i].bill_id);
+		isFind = true;		
+	}
+	else{
+		for(var j = 0; j < bills[i].cosponsor_ids.length; ++j){
+			index = candidateBioguideIds.indexOf(bills[i].cosponsor_ids[j]);
+			if(index >= 0){
+				bill_list.push(bills[i].bill_id);
+				isFind = true;
+				break;
+			}
+		}
+	}
+	 if(!isFind)
+		continue;
+
+//	  console.log(JSON.stringify(bill_list));
+
+	  console.log(JSON.stringify(bill_list));
+	  console.log(candidateBioguideIds[index]);
+          stmt.run({
+            $bills: JSON.stringify(bill_list),
+	    $bioguideId: candidateBioguideIds[index]
+          });
+        
+      }
+      stmt.finalize();
+      if (data.next) {
+        fetchBillsData(data.next, candidateBioguideIds);
+      } else {
+        console.log('fetch supported bills completed');
+        db.close();
+      }
+    });
+  }).on('error', (e) => {
+    console.log('Got error: ${e.message}');
+  });
+*/
+}
 
 function fetchCandidatesData(url, existedCandidateFecIds) {
   http.get(url, (res) => {
@@ -117,7 +189,7 @@ function fetchCandidatesData(url, existedCandidateFecIds) {
       }
     });
   }).on('error', (e) => {
-    console.log(`Got error: ${e.message}`);
+    console.log('Got error: ${e.message}');
   });
 }
 
@@ -141,7 +213,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/users', users);
 app.use('/candidates', candidates);
-
+app.use('/bills', bills);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

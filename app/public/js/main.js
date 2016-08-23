@@ -1,7 +1,7 @@
 var MY_APP_ID = 'PqNXb0zT1antU2yTXGg6EQltjjJAm2GUWqljxbtE';
 var REST_API_KEY = '[apikey]';
 
-var SUNLIGHT_APIKEY = '[apikey]';
+var SUNLIGHT_APIKEY = 'd9eeb169a7224fe28ae0f32aca0dc93e';
 var SUNLIGHT_BILLS_URI = 'http://congress.api.sunlightfoundation.com/bills';
 var TAIWAN_RELEVANT_BILLS = {
     "hres494-113": {
@@ -193,6 +193,16 @@ function getRepCandidates(state, district) {
     });
 }
 
+function getBills(){
+  return $.ajax('/bills',{
+	type: 'GET',
+	contentType: 'application/json',
+	data:{}
+	});
+
+}
+
+
 function sortByDistrict(data) {
     return _.sortBy(data, function(congress) {
         if (congress.district == '') {
@@ -289,16 +299,16 @@ $(function() {
 
         var sentaorsDeferred = getSenatorCandidates(state);
         var repsDeferred = getRepCandidates(state, district);
+	var bills = getBills();
 	//Clear old data
 	$("#senator_row").html("");
 	$("#reps_row").html("");
-
         // Feed information fetched from DB into UI
-        $.when(sentaorsDeferred, repsDeferred).then(function(senatorsCallback, repsCallback) {
+        $.when(sentaorsDeferred, repsDeferred, bills).then(function(senatorsCallback, repsCallback, billsCallback) {
 
             var senators = senatorsCallback[0];
             var reps = repsCallback[0];
-
+	    var bills = billsCallback[0];
             // var MOCK_CANDIDATES = [
             //     {
             //         "img_src": "https://d26u557eiepppx.cloudfront.net/images/congress/225x275/M001111.jpg",
@@ -386,6 +396,23 @@ $(function() {
             // ];
 
             // var senatorCandidates = repsCandidates = MOCK_CANDIDATES;
+                senators.forEach(function(sentaor){
+                if(sentaor.bills){
+                        sentaor.bills = JSON.parse(sentaor.bills);
+                }
+                else{
+                   sentaor.bills = [];
+                }
+        	});
+
+	        reps.forEach(function(rep){
+                if(rep.bills){
+                        rep.bills = JSON.parse(rep.bills);
+                }
+                else{
+                   rep.bills = [];
+                }
+	        });
             senators = _.sortBy(senators, function(candidate) {
                 return !candidate.incumbent;
             });
@@ -393,8 +420,9 @@ $(function() {
                 return !candidate.incumbent;
             });
 
-            $(incumbent_with_challenger_tpl({candidates: senators})).appendTo('#senator_row');
-            $(incumbent_with_challenger_tpl({candidates: reps})).appendTo('#reps_row');
+            $(incumbent_with_challenger_tpl({candidates: senators, bills: bills})).appendTo('#senator_row');
+            $(incumbent_with_challenger_tpl({candidates: reps, bills: bills})).appendTo('#reps_row');
+	   
             // _.each(senators, function(candidate) {
             //     // TODO: categorize candidates into Incumbent and a list of Challengers
             //     var challengers = incumbent = candidate;

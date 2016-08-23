@@ -184,11 +184,11 @@
             <% if(_.indexOf(candidates, candidate) % 2 === 0) { %>
                 <div class="row">
                     <div class="col-xs-6">
-                        <%= candidate_tpl({candidate: candidate, role: "Incumbent"})%>
+                        <%= candidate_tpl({candidate: candidate, role: "Incumbent", bills: bills})%>
                     </div>
             <% } else { %>
                     <div class="col-xs-6">
-                        <%= candidate_tpl({candidate: candidate, role: "Challenger"})%>
+                        <%= candidate_tpl({candidate: candidate, role: "Challenger", bills: bills})%>
                     </div>
                 </div>
             <% } %>
@@ -238,23 +238,35 @@
             <div class="row">
         	<% if (candidate.incumbent) {%>
                 	<div id="supportedbill">
-			<h4 class ="font-weight-bold">Taiwan Bills Supported: </h4>
+			<h4 class ="font-weight-bold">Taiwan Bills Supported:<%=candidate.bills.length%></h4>
+				<table>
+				</table>
 			</div>
         	<% } %>
-		<!-- TODO: If candidate have response, show the response -->
+		<!-- TODO: Note display -->
 
 			<div id="questionnaire" class="questionnaire-box">
 	                	<h4 class ="font-weight-bold">Questionnaire</h4	>
 				<p>Ask the <font color="red">candidate</font> to answer the questionnaire on their support for Taiwan. <a href="#">See the questionnaire.</a></p>
 			<table class="questionnaire-table">
 				<tr>
+				<%if(!candidate.questionnaire_response){%>
 					<%if(candidate.twitter){%>
 						<td><a href="http://www.twitter.com/intent/tweet?screen_name=<%=candidate.twitter%>&text=Will you support our important trade and security ally Taiwan? Please answer the questions at http://ACTtaiwan.org/q" target="_blank"><img class="social-icon questionnaire-button" src="./img/colored/twitter.png"/>Ask via Twitter</a></td>
-					<%}%>
+						<%}%>
 					 <%if(candidate.email){%>
 						<td><a href="mailto:<%=candidate.email%>?subject=Will you support our important trade and security ally Taiwan? Please let us know your stand&body=Dear <%=candidate.firstName%> <%=candidate.lastName%>,%0D%0A%0D%0AAs you may know, Taiwan is a very important partner and ally to the U.S. In 2015, the U.S. exported $25.86 billion to Taiwan, worth over 150,000 jobs. Taiwan is also a key part of the Asia-Pacific security sphere; if Communist China were to take over Taiwan, Beijing would finally have access to a blue-water port to launch its submarines undetected into the Pacific.%0D%0A%0D%0AWe are very concerned that the U.S. continues to work in strengthening the enduring bonds between the American and Taiwanese peoples. We want our elected representatives to support self-determination and the protection of democracy for Taiwan, as these will protect American interests in Asia.%0D%0A%0D%0AWill you please complete the American Citizens for Taiwan Candidate Questionnaire at http%3A%2F%2Famericancitizensfortaiwan.org%2Fq. The answers will be posted publicly at http%3A%2F%2Famericancitizensfortaiwan.org%2Fcongressional-guide and widely distributed via the web, social media, mailing lists, and at public events.%0D%0A%0D%0AThank you.%0D%0A"><img class="social-icon questionnaire-button" src="./img/colored/email.png"/>Ask via email</a>
 </td>
 					<%}%>
+				<%}else{%>
+					<%if(candidate.twitter){%>
+					<td><a href="http://www.twitter.com/intent/tweet?screen_name=<%=candidate.twitter%>&text= Response: <%candidate.questionnaire_response%>" target="_blank"><img class="social-icon questionnaire-button" src="./img/colored/twitter.png">Share via Twitter</a></td>
+					<%}%>
+					<%if(candidate.email){%>
+					<!--TODO: The share link need to be refined-->
+					<td><a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.americancitizensfortaiwan.org%2F&display=popup&ref=plugin&src=like&app_id=126739610711965" target="blank"><img class="social-icon questionnaire-button" src="./img/colored/facebook.png">Share via Facebook</a></td>
+					<%}%>
+				<%}%>
 				</tr>
 			</table>
 			</div>
