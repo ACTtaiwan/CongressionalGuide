@@ -10,7 +10,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var CronJob = require('cron').CronJob;
 
-var SUNLIGHT_APIKEY = 'd9eeb169a7224fe28ae0f32aca0dc93e';
+var SUNLIGHT_APIKEY = '[apikey]';
 var LEGISTLATOR_URL = 'http://congress.api.sunlightfoundation.com/legislators';
 var BILL_URL = 'http://congress.api.sunlightfoundation.com/bills?fields=official_title,urls.congress,sponsor_id,cosponsor_ids';
 
