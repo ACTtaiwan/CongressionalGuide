@@ -138,7 +138,7 @@ for human in congressman:
       website = v,
     elif k == 'twtr':
       tv = v[v.find('twitter.com')+len('twitter.com')+1:]
-      twitter = tv[:tv.find('/')],
+      twitter = tv[:tv.find('/')].replace('@',''),
     elif k == 'fb':
       facebook = v,
     elif k == 'state':
