@@ -67,7 +67,7 @@ def getStateAbbr(s):
     print 'key ' + s + ' not found!'
     return None
 
-dbpath = '/root/CongressionalGuide/app/db'
+dbpath = '/root/CongressionalGuide/db/db.sqlite3'
 if not (dbpath and os.path.isfile(dbpath)):
   print 'db file not found'
   exit() 
