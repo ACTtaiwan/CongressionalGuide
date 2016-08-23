@@ -184,11 +184,11 @@
             <% if(_.indexOf(candidates, candidate) % 2 === 0) { %>
                 <div class="row">
                     <div class="col-xs-6">
-                        <%= candidate_tpl({candidate: candidate, role: "Incumbent", bills: bills})%>
+                        <%= candidate_tpl({candidate: candidate, role: "Incumbent"})%>
                     </div>
             <% } else { %>
                     <div class="col-xs-6">
-                        <%= candidate_tpl({candidate: candidate, role: "Challenger", bills: bills})%>
+                        <%= candidate_tpl({candidate: candidate, role: "Challenger"})%>
                     </div>
                 </div>
             <% } %>
@@ -240,9 +240,15 @@
                 	<div id="supportedbill">
 			<h4 class ="font-weight-bold">Taiwan Bills Supported:<%=candidate.bills.length%></h4>
 				<table>
+				<%for(var i = 0; i < candidate.bills.length; ++i){%>
+				<tr>
+					<td><a href="<%=candidate.bills[i].url%>"><%=i+1%>. <%=candidate.bills[i].title%></a>
+					</td>
+				</tr>
+				<%}%>
 				</table>
 			</div>
-        	<% } %>
+  	    	<% } %>
 		<!-- TODO: Note display -->
 
 			<div id="questionnaire" class="questionnaire-box">
