@@ -28,7 +28,7 @@ Access the running acttaiwan/cgapp Container bash shell to interact live with bo
 `$ docker exec -it cgapp /bin/bash`
 
 ### phpLiteAdmin
-phpLiteAdmin is a web-based SQLite database admin tool written in PHP with support for SQLite3. This is used to directly access the data and make updates for adding questionnaire answers for the candidates.
+phpLiteAdmin is a web-based SQLite database admin tool written in PHP with support for SQLite3. This is used to directly access the data and make updates for adding questionnaire answers for the candidates. Access the admin page at http://localhost:2015/phpliteadmin.php.
 
 ## SQLite DB
 The SQLite DB is mounted inside the containers from `/db/db.sqlite3`. You can interact directly with the DB on your local drive and those changes should show in the app.
