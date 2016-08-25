@@ -43,8 +43,9 @@ db.serialize(function() {
     'facebook TEXT,' +
     'twitter TEXT,' +
     'youtube TEXT,' +
-    'note BLOB' +
-  ')');
+    'note BLOB,' +
+    'questionnaire_response BLOB' +
+    ')');
 
   db.run('CREATE TABLE IF NOT EXISTS bills(' +
     'billId TEXT, ' +

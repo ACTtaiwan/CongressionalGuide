@@ -23,9 +23,12 @@ After you make any changes to the code, rebuild with
 ### App
 The `app` Docker container is based on the [Official Node JS Docker container](https://hub.docker.com/_/node/). The [Dockerizing a Node.js web app tutorial](https://nodejs.org/en/docs/guides/nodejs-docker-webapp/) is a good starting point for understanding how things work in this container.
 
-### Interaction with the Container or Code
+#### Interaction with the Container or Code
 Access the running acttaiwan/cgapp Container bash shell to interact live with both data and running processes
 `$ docker exec -it cgapp /bin/bash`
+
+### phpLiteAdmin
+phpLiteAdmin is a web-based SQLite database admin tool written in PHP with support for SQLite3. This is used to directly access the data and make updates for adding questionnaire answers for the candidates.
 
 ## SQLite DB
 The SQLite DB is mounted inside the containers from `/db/db.sqlite3`. You can interact directly with the DB on your local drive and those changes should show in the app.

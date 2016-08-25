@@ -1,7 +1,7 @@
 var MY_APP_ID = '[apikey]';
 var REST_API_KEY = '[apikey]';
 
-var SUNLIGHT_APIKEY = 'd9eeb169a7224fe28ae0f32aca0dc93e';
+var SUNLIGHT_APIKEY = '[apikey]';
 var SUNLIGHT_BILLS_URI = 'http://congress.api.sunlightfoundation.com/bills';
 var TAIWAN_RELEVANT_BILLS = {
     "hres494-113": {
@@ -50,7 +50,7 @@ function getLocation(zip, address) {
     var location = [];
     $.ajax('https://geoservices.tamu.edu/Services/Geocode/WebService/GeocoderWebServiceHttpNonParsed_V04_01.aspx', {
         data: {
-            apiKey: 'b37c6aea99ad4425a7e5f90169dbdddb',
+            apiKey: '[apikey]',
             version: '4.01',
             zip: zip,
             streetAddress: address

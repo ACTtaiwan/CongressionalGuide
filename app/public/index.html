@@ -28,23 +28,6 @@
     <script type="text/javascript">
         try{Typekit.load();}catch(e){}
     </script>
-    <!-- Facebook Conversion Code for ACT Voter Guide/Submit -->
-    <script>
-        (function() {
-            var _fbq = window._fbq || (window._fbq = []);
-            if (!_fbq.loaded) {
-                var fbds = document.createElement('script');
-                fbds.async = true;
-                fbds.src = '//connect.facebook.net/en_US/fbds.js';
-                var s = document.getElementsByTagName('script')[0];
-                s.parentNode.insertBefore(fbds, s);
-                _fbq.loaded = true;
-            }
-        })();
-        window._fbq = window._fbq || [];
-        window._fbq.push(['track', '6017273424302', {'value':'0.00','currency':'USD'}]);
-    </script>
-    <noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?ev=6017273424302&amp;cd[value]=0.00&amp;cd[currency]=USD&amp;noscript=1" /></noscript>
 </head>
 <body>
     <!-- Facebook SDK -->
@@ -253,7 +236,7 @@
 
 			<div id="questionnaire" class="questionnaire-box">
 	                	<h4 class ="font-weight-bold">Questionnaire</h4	>
-				<p>Ask the <font color="red">candidate</font> to answer the questionnaire on their support for Taiwan. <a href="#">See the questionnaire.</a></p>
+				<p>Ask the <font color="red">candidate</font> to answer the questionnaire on their support for Taiwan. <br><a href="http://www.americancitizensfortaiwan.org/congressional_candidate_questionnaire">See the questionnaire.</a></p>
 			<table class="questionnaire-table">
 				<tr>
 				<%if(!candidate.questionnaire_response){%>
@@ -284,16 +267,5 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
     <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.2.19.min.js"></script>
     <script src="./js/main.js"></script>
-    <script type="text/javascript">
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', 'UA-25760445-1']);
-        _gaq.push(['_setDomainName', 'americancitizensfortaiwan.org']);
-        _gaq.push(['_trackPageview']);
-        (function() {
-            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-        })();
-    </script>
 </body>
 </html>
