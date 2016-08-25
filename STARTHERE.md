@@ -9,7 +9,7 @@ Clone the [ACTtaiwan/CongressionalGuide](https://github.com/ACTtaiwan/Congressio
 Execute the below command in the root Congressional Guide project folder
 `$ docker-compose up`
 
-Access the running webpage at `http://localhost:49160/`
+Access the running webpage at `http://localhost:49170/`
 
 This will drop you into the running services so you can observe the log. To quit, `$ docker-compose down`.
 

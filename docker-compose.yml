@@ -10,3 +10,13 @@ services:
     volumes:
     # mount the db volume for db.sqlite3
     - ./db:/opt/db
+  websql:
+    # for direct access of db data (adding questionnaire answers or notes)
+    build: ./phpLiteAdmin
+    image: acttaiwan/phpliteadmin
+    container_name: websql
+    ports:
+    - "2015:2015"
+    volumes:
+    # mount the db volume for db.sqlite3
+    - ./db:/db
