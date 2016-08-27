@@ -80,7 +80,8 @@ except sqlite3.Error:
   db.close()
 
 
-jsonpath = '/root/CongressionalGuide/app/candidates/senate.json'
+#jsonpath = '/root/CongressionalGuide/app/candidates/senate.json'
+jsonpath = '/root/CongressionalGuide/app/candidates/house.json'
 if not (jsonpath and os.path.isfile(jsonpath)):
   print 'json file not found'
   exit()
@@ -97,10 +98,8 @@ congressman = json.load(open(jsonpath))
 # if exists, update_query
 # else insert_query
 
-update_query = 'UPDATE candidates SET img_src = ?, facebook = ?, twitter = ?, website = ?, youtube = ? where firstName like ? and lastName like ? and state = ? and district = ?'
+update_query = 'UPDATE candidates SET img_src = ?, facebook = ?, twitter = ?, website = ?, youtube = ?, note = ? where firstName like ? and lastName like ? and state = ? and district = ?'
 insert_query = 'INSERT INTO candidates VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
-
-#TODO: error check for bad input (k,v) range out of bound
 
 for human in congressman:
   firstName=(None,)
@@ -114,7 +113,7 @@ for human in congressman:
   incumbent=(False,)
   bioguideId=(None,)
   fecId=(None,)
-  note=(None,)
+  note=('ballotpedia',)
   website=(None,)
   email=(None,)
   facebook=(None,)
@@ -154,7 +153,7 @@ for human in congressman:
   match_firstName = '%'+firstName[0]+'%',
   match_lastName = '%'+lastName[0]+'%',
   insert_values = (firstName + lastName + prefix + suffix + party + chamber + state + district + incumbent + bioguideId + fecId + note + website + email + facebook + twitter + youtube + img_src)
-  update_values = (img_src + facebook + twitter + website + youtube + match_firstName + match_lastName + state + district)
+  update_values = (img_src + facebook + twitter + website + youtube + note + match_firstName + match_lastName + state + district)
 
   # Match with existing Sunlight data: lastName, first word of firstName, state and district
   c.execute('SELECT count(*) FROM candidates where firstName like ? and lastName like ? and state = ? and district = ?;', match_firstName + match_lastName + state + district)
