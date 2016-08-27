@@ -1,0 +1,18 @@
+- To run scrapy:
+scrapy crawl <spider name>
+
+- Use -o <filename> to output the parsed data to JSON file.
+scrapy crawl cand -o items.json
+ 
+Use -L to adjust the logging level 'DEBUG' 'INFO' ...
+scrapy crawl senate2 -L INFO
+
+- Use different spider for following purpose:
+Spider1 parse out state links
+Spider2 parse the majority of candidate
+Spider4 pase FL, NH as they have different html layout
+
+- Note:
+NY senators have multiple party
+https://ballotpedia.org/United_States_Senate_election_in_New_York,_2016
+

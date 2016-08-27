@@ -1,7 +1,13 @@
+#!/usr/bin/python 
 import sqlite3, json, os
+import logging, sys
 from collections import defaultdict
 
-# Dump candidates information from items.json into our sqlite3 database
+#
+# This script dump candidates information from filename.json into our sqlite3 database
+#
+
+logging.basicConfig(stream=sys.stderr,level=logging.DEBUG)
 
 def getStateAbbr(s):
   try:
@@ -61,7 +67,7 @@ def getStateAbbr(s):
     print 'key ' + s + ' not found!'
     return None
 
-dbpath = '/Users/Mark/Google Drive/act/CongressionalGuide/app/db'
+dbpath = '/root/CongressionalGuide/db/db.sqlite3'
 if not (dbpath and os.path.isfile(dbpath)):
   print 'db file not found'
   exit() 
@@ -71,10 +77,11 @@ try:
   c = db.cursor()
 except sqlite3.Error:
   print 'sqlite3 error'
-  c.close()
+  db.close()
 
 
-jsonpath = '/Users/Mark/Google Drive/act/CongressionalGuide/app/candidates/items3.json'
+#jsonpath = '/root/CongressionalGuide/app/candidates/senate.json'
+jsonpath = '/root/CongressionalGuide/app/candidates/house.json'
 if not (jsonpath and os.path.isfile(jsonpath)):
   print 'json file not found'
   exit()
@@ -82,8 +89,8 @@ if not (jsonpath and os.path.isfile(jsonpath)):
 congressman = json.load(open(jsonpath))
 
 
-# Existing schema, total of 18 columns  TODO: make sure we udpate schema 'img_src'
-# alter table candidates add column src_img TEXT;
+# Existing schema, total of 18 columns  
+# alter table candidates add column img_src TEXT;
 
 # column = (firstName, lastName , prefix , suffix , party , chamber , state , district , incumbent , bioguideId , fecId , note , website , email , facebook , twitter , youtube , img_src)
 
@@ -91,25 +98,22 @@ congressman = json.load(open(jsonpath))
 # if exists, update_query
 # else insert_query
 
-update_query = 'UPDATE candidates SET img_src = ?, facebook = ?, twitter = ?, website = ? where lastName = ? and firstName = ?'
+update_query = 'UPDATE candidates SET img_src = ?, facebook = ?, twitter = ?, website = ?, youtube = ?, note = ? where firstName like ? and lastName like ? and state = ? and district = ?'
 insert_query = 'INSERT INTO candidates VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
 
-#TODO: error check for bad input (k,v) range out of bound
 for human in congressman:
-  skip = False
-
   firstName=(None,)
   lastName=(None,)
   prefix=(None,)
   suffix=(None,)
   party=(None,)
-  chamber=('H',)
+  chamber=(None,)
   state=(None,)
   district=(None,)
   incumbent=(False,)
   bioguideId=(None,)
   fecId=(None,)
-  note=(None,)
+  note=('ballotpedia',)
   website=(None,)
   email=(None,)
   facebook=(None,)
@@ -117,15 +121,12 @@ for human in congressman:
   youtube=(None,)
   img_src=(None,)
 
+  mesg=''
   for k,v in human.iteritems():
-    print '(k,v)=('+k+' ,'+v+ ')'
+    mesg += '(k,v)=('+k+' ,'+v+ ')\n'
     if k == 'name':
-      if len(v.split())!=2:
-        print '### bad name ###'
-        skip = True 
-      else:
-        firstName = v.split()[0],
-        lastName = v.split()[1], 
+      firstName = v.split()[0],
+      lastName = v.split()[-1], 
     elif k == 'party':
       party = v[0],
     elif k == 'dist':
@@ -135,36 +136,37 @@ for human in congressman:
     elif k == 'camp':
       website = v,
     elif k == 'twtr':
-      twitter = v,
+      tv = v[v.find('twitter.com')+len('twitter.com')+1:]
+      twitter = tv[:tv.find('/')].replace('@',''),
     elif k == 'fb':
       facebook = v,
     elif k == 'state':
       state = getStateAbbr(v),
     elif k == 'pic':
       img_src = v,
-     
-  if skip:
-    print '[skip]'
-    continue
+    elif k == 'chamber':
+      chamber = v,
+    elif k == 'youtube':
+      youtube = v,
 
-  insert_values = (firstName + lastName + prefix + suffix  + party + chamber + state + district + incumbent + bioguideId + fecId + note + website + email + facebook + twitter + youtube + img_src)
-  print 'insert_values: '
-  print insert_values
+  logging.debug(mesg)
+  match_firstName = '%'+firstName[0]+'%',
+  match_lastName = '%'+lastName[0]+'%',
+  insert_values = (firstName + lastName + prefix + suffix + party + chamber + state + district + incumbent + bioguideId + fecId + note + website + email + facebook + twitter + youtube + img_src)
+  update_values = (img_src + facebook + twitter + website + youtube + note + match_firstName + match_lastName + state + district)
 
-  update_values = (img_src + facebook + twitter + website + lastName + firstName)
-  print 'update_values: '
-  print update_values
-
-  c.execute('SELECT count(*) FROM candidates where firstName == ? and lastName == ?;', firstName+lastName)
-  found = c.fetchone()[0]>0
-  if found:
-    print 'update'
+  # Match with existing Sunlight data: lastName, first word of firstName, state and district
+  c.execute('SELECT count(*) FROM candidates where firstName like ? and lastName like ? and state = ? and district = ?;', match_firstName + match_lastName + state + district)
+  obj = c.fetchone()
+  if obj[0]:
+    logging.info('update_values: %s', update_values)
     c.execute(update_query, update_values)
   else:
-    print 'insert'
+    logging.info('insert_values: %s', insert_values)
     c.execute(insert_query, insert_values)
-  print '[OK]'
+  logging.info('[OK]\n\n')
 
-print '[done]'
-c.close()
+
+db.commit()
+db.close()
 

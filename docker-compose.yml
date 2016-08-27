@@ -1,0 +1,22 @@
+# Congressional Guide Docker Composer File
+version: '2'
+services:
+  app:
+    build: ./app
+    image: acttaiwan/cgapp
+    container_name: cgapp
+    ports:
+    - "49170:3000"
+    volumes:
+    # mount the db volume for db.sqlite3
+    - ./db:/opt/db
+  websql:
+    # for direct access of db data (adding questionnaire answers or notes)
+    build: ./phpLiteAdmin
+    image: acttaiwan/phpliteadmin
+    container_name: websql
+    ports:
+    - "2015:2015"
+    volumes:
+    # mount the db volume for db.sqlite3
+    - ./db:/db

@@ -28,23 +28,6 @@
     <script type="text/javascript">
         try{Typekit.load();}catch(e){}
     </script>
-    <!-- Facebook Conversion Code for ACT Voter Guide/Submit -->
-    <script>
-        (function() {
-            var _fbq = window._fbq || (window._fbq = []);
-            if (!_fbq.loaded) {
-                var fbds = document.createElement('script');
-                fbds.async = true;
-                fbds.src = '//connect.facebook.net/en_US/fbds.js';
-                var s = document.getElementsByTagName('script')[0];
-                s.parentNode.insertBefore(fbds, s);
-                _fbq.loaded = true;
-            }
-        })();
-        window._fbq = window._fbq || [];
-        window._fbq.push(['track', '6017273424302', {'value':'0.00','currency':'USD'}]);
-    </script>
-    <noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?ev=6017273424302&amp;cd[value]=0.00&amp;cd[currency]=USD&amp;noscript=1" /></noscript>
 </head>
 <body>
     <!-- Facebook SDK -->
@@ -64,7 +47,7 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <h1>Congressional Guide</h1>
-                        <p>See your members of Congress by entering your address and zip code or state and district.</p>
+                        <p>Enter your street address and zip code to see who is running your district.</p>
                     </div>
                 </div>
                 <div class="row">
@@ -163,14 +146,14 @@
         <div id="main" class="container-fluid">
             <div class="jumbotron bg-success">
                 <div class="row p-b-3">
-                    <h2>Senator <span class="text-danger">Candidators</span></h2>
+                    <h2>Senate <span class="text-danger">Candidates</span></h2>
                 </div>
                 <div id="senator_row"></div>
             </div>
 
             <div class="jumbotron bg-warning">
                 <div class="row p-b-3">
-                    <h2>Representative <span class="text-danger">Candidators</span></h2>
+                    <h2>Representative <span class="text-danger">Candidates</span></h2>
                 </div>
                 <div id="reps_row"></div>
             </div>
@@ -202,6 +185,7 @@
     <script type="text/template" id="candidate-tpl">
         <div class="row">
             <div class="col-xs-6">
+		<% if(candidate.img_src === null) candidate.img_src =  "./img/default-img.png"%>
                 <img class="img-responsive" src="<%=candidate.img_src%>"/>
             </div>
             <div class="col-xs-6">
@@ -217,29 +201,65 @@
                 </h4>
                 <div>
                     <%if(candidate.website){%>
-                    <a href="<%=candidate.website%>" target="_blank"><img class="social-icon" src="./img/link-icon.png"/></a>
+                    <a href="<%=candidate.website%>" target="_blank"><img class="social-icon" src="./img/colored/link.png"/></a>
                     <%}%>
                     <%if(candidate.email){%>
-                    <a href="mailto:<%=candidate.oc_email%>?body=Dear <%=candidate.firstName + ' ' + candidate.lastName%>,%0D%0A" target="_blank"><img class="social-icon" src="./img/email-icon.png"/></a>
+                    <a href="mailto:<%=candidate.email%>?body=Dear <%=candidate.firstName + ' ' + candidate.lastName%>,%0D%0A" target="_blank"><img class="social-icon" src="./img/colored/email.png"/></a>
                     <%}%>
-                    <%if(candidate.facebook_id){%>
-                    <a href="http://www.facebook.com/<%=candidate.facebook%>" target="_blank"><img class="social-icon" src="./img/facebook-icon.png"/></a>
+                    <%if(candidate.facebook){%>
+                    <a href="http://www.facebook.com/<%=candidate.facebook%>" target="_blank"><img class="social-icon" src="./img/colored/facebook.png"/></a>
                     <%}%>
-                    <%if(candidate.twitter_id){%>
-                    <a href="http://www.twitter.com/<%=candidate.twitter%>" target="_blank"><img class="social-icon" src="./img/twitter-icon.png"/></a>
+                    <%if(candidate.twitter){%>
+                    <a href="http://www.twitter.com/<%=candidate.twitter%>" target="_blank"><img class="social-icon" src="./img/colored/twitter.png"/></a>
                     <%}%>
-                    <%if(candidate.youtube_id){%>
-                    <a href="http://www.youtube.com/<%=candidate.youtube%>" target="_blank"><img class="social-icon" src="./img/youtube-icon.png"/></a>
+                    <%if(candidate.youtube){%>
+                    <a href="http://www.youtube.com/<%=candidate.youtube%>" target="_blank"><img class="social-icon" src="./img/colored/youtube.png"/></a>
                     <%}%>
                 </div>
             </div>
         </div>
-        <% if (candidate.incumbent) {%>
             <div class="row">
-                <h4 class ="font-weight-bold">Taiwan Bills Supported: </h4>
-                <h4 class ="font-weight-bold">Questionnaire</h4>
+        	<% if (candidate.incumbent) {%>
+                	<div id="supportedbill">
+			<h4 class ="font-weight-bold">Taiwan Bills Supported:<%=candidate.bills.length%></h4>
+				<table>
+				<%for(var i = 0; i < candidate.bills.length; ++i){%>
+				<tr>
+					<td><a href="<%=candidate.bills[i].url%>"><%=i+1%>. <%=candidate.bills[i].title%></a>
+					</td>
+				</tr>
+				<%}%>
+				</table>
+			</div>
+  	    	<% } %>
+		<!-- TODO: Note display -->
+
+			<div id="questionnaire" class="questionnaire-box">
+	                	<h4 class ="font-weight-bold">Questionnaire</h4	>
+				<p>Ask the <font color="red">candidate</font> to answer the questionnaire on their support for Taiwan. <br><a href="http://www.americancitizensfortaiwan.org/congressional_candidate_questionnaire">See the questionnaire.</a></p>
+			<table class="questionnaire-table">
+				<tr>
+				<%if(!candidate.questionnaire_response){%>
+					<%if(candidate.twitter){%>
+						<td><a href="http://www.twitter.com/intent/tweet?screen_name=<%=candidate.twitter%>&text=Will you support our important trade and security ally Taiwan? Please answer the questions at http://ACTtaiwan.org/q" target="_blank"><img class="social-icon questionnaire-button" src="./img/colored/twitter.png"/>Ask via Twitter</a></td>
+						<%}%>
+					 <%if(candidate.email){%>
+						<td><a href="mailto:<%=candidate.email%>?subject=Will you support our important trade and security ally Taiwan? Please let us know your stand&body=Dear <%=candidate.firstName%> <%=candidate.lastName%>,%0D%0A%0D%0AAs you may know, Taiwan is a very important partner and ally to the U.S. In 2015, the U.S. exported $25.86 billion to Taiwan, worth over 150,000 jobs. Taiwan is also a key part of the Asia-Pacific security sphere; if Communist China were to take over Taiwan, Beijing would finally have access to a blue-water port to launch its submarines undetected into the Pacific.%0D%0A%0D%0AWe are very concerned that the U.S. continues to work in strengthening the enduring bonds between the American and Taiwanese peoples. We want our elected representatives to support self-determination and the protection of democracy for Taiwan, as these will protect American interests in Asia.%0D%0A%0D%0AWill you please complete the American Citizens for Taiwan Candidate Questionnaire at http%3A%2F%2Famericancitizensfortaiwan.org%2Fq. The answers will be posted publicly at http%3A%2F%2Famericancitizensfortaiwan.org%2Fcongressional-guide and widely distributed via the web, social media, mailing lists, and at public events.%0D%0A%0D%0AThank you.%0D%0A"><img class="social-icon questionnaire-button" src="./img/colored/email.png"/>Ask via email</a>
+</td>
+					<%}%>
+				<%}else{%>
+					<%if(candidate.twitter){%>
+					<td><a href="http://www.twitter.com/intent/tweet?screen_name=<%=candidate.twitter%>&text= Response: <%candidate.questionnaire_response%>" target="_blank"><img class="social-icon questionnaire-button" src="./img/colored/twitter.png">Share via Twitter</a></td>
+					<%}%>
+					<%if(candidate.email){%>
+					<!--TODO: The share link need to be refined-->
+					<td><a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.americancitizensfortaiwan.org%2F&display=popup&ref=plugin&src=like&app_id=126739610711965" target="blank"><img class="social-icon questionnaire-button" src="./img/colored/facebook.png">Share via Facebook</a></td>
+					<%}%>
+				<%}%>
+				</tr>
+			</table>
+			</div>
             </div>
-        <% } %>
     </script>
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
@@ -247,16 +267,5 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
     <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.2.19.min.js"></script>
     <script src="./js/main.js"></script>
-    <script type="text/javascript">
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', 'UA-25760445-1']);
-        _gaq.push(['_setDomainName', 'americancitizensfortaiwan.org']);
-        _gaq.push(['_trackPageview']);
-        (function() {
-            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-        })();
-    </script>
 </body>
 </html>
