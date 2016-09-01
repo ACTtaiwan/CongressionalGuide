@@ -3,9 +3,10 @@ var router = express.Router();
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('../db/db.sqlite3');
 
-/* GET users listing. */
+/* GET candidates listing. */
 router.get('/', function(req, res, next) {
   var candidates = [];
+  var selectClauseGenElect = 'SELECT coalesce(max(gen_election_candidate), \'0\') AS generalElection FROM candidates';
   var selectClause = 'SELECT img_src, bioguideId, firstName, lastName, party, chamber, state, district, incumbent, website, email, facebook, twitter, youtube FROM candidates';
 
   var whereClause = '';
@@ -26,10 +27,20 @@ router.get('/', function(req, res, next) {
     params.$district = req.query.district;
   }
 
-  db.each(selectClause + whereClause, params, function(err, row) {
-    candidates.push(row);
-  }, function() {
-    res.send(candidates);
+  db.serialize(function() {
+      var generalElection = '';
+	  // Find out if we only need to show General Election candidates
+	  db.get(selectClauseGenElect + whereClause, params, function(err, row) {
+	  	if (row.generalElection == 1) {
+			whereClause = updateWhereClause(whereClause, 'gen_election_candidate = 1');
+	  	}
+	  	// Now select candidates
+	  	db.each(selectClause + whereClause, params, function(err, row) {
+			candidates.push(row);
+	  	}, function() {
+		res.send(candidates);
+	  	});
+	  });
   });
 });
 
