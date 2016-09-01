@@ -9,7 +9,6 @@ router.get('/', function(req, res, next) {
   var selectClause = 'SELECT billId, officialTitle,url, sponsorId FROM bills';
   var params;
   db.each(selectClause, params, function(err, row) {
-    console.log(row);
     bills.push(row);
   }, function() {
     res.send(bills);
@@ -21,7 +20,6 @@ router.get('/sponsor', function(req, res, next) {
   var selectClause = 'SELECT cosponsorId, billId FROM cosponsors_bills';
   var params;
   db.each(selectClause, params, function(err, row) {
-    console.log(row);
     sponsors.push(row);
   }, function() {
     res.send(sponsors);
