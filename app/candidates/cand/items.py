@@ -23,3 +23,4 @@ class CandItem(scrapy.Item):
     incumbent = scrapy.Field()
     youtube = scrapy.Field()
     email = scrapy.Field()
+    gen_election_candidate = scrapy.Field()

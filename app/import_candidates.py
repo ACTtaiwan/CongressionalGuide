@@ -6,7 +6,7 @@ from collections import defaultdict
 #
 # This script dump candidates information from filename.json into our sqlite3 database
 #
-# XXX:Please update this file when table schema changes. Current column = (firstName, lastName , prefix , suffix , party , chamber , state , district , incumbent , bioguideId , fecId , note , website , email , facebook , twitter , youtube , img_src, questionnaire_response)
+# XXX:Please update this file when table schema changes. Current column = (firstName, lastName , prefix , suffix , party , chamber , state , district , incumbent , bioguideId , fecId , note , website , email , facebook , twitter , youtube , img_src, questionnaire_response, gen_election_candidate)
 
 
 logging.basicConfig(stream=sys.stderr,level=logging.DEBUG)
@@ -82,10 +82,11 @@ except sqlite3.Error:
   db.close()
 
 
-jsonpath = '/root/CongressionalGuide/app/candidates/senate.json'
+jsonpath = '/root/CongressionalGuide/app/candidates/gen_senate.json'
+#jsonpath = '/root/CongressionalGuide/app/candidates/senate.json'
 #jsonpath = '/root/CongressionalGuide/app/candidates/house.json'
 if not (jsonpath and os.path.isfile(jsonpath)):
-  print 'json file not found'
+  print 'candidates json file not found'
   exit()
 
 congressman = json.load(open(jsonpath))
@@ -95,8 +96,8 @@ congressman = json.load(open(jsonpath))
 # if exists, update_query
 # else insert_query
 
-update_query = 'UPDATE candidates SET img_src = ?, facebook = ?, twitter = ?, website = ?, youtube = ?, note = ? where firstName like ? and lastName like ? and state = ? and district = ?'
-insert_query = 'INSERT INTO candidates VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
+update_query = 'UPDATE candidates SET img_src = ?, facebook = ?, twitter = ?, website = ?, youtube = ?, note = ?, gen_election_candidate = ?, incumbent = ? where firstName like ? and lastName like ? and state = ? and district = ?'
+insert_query = 'INSERT INTO candidates VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
 
 for human in congressman:
   firstName=(None,)
@@ -107,7 +108,7 @@ for human in congressman:
   chamber=(None,)
   state=(None,)
   district=(None,)
-  incumbent=(False,)
+  incumbent=(None,)
   bioguideId=(None,)
   fecId=(None,)
   note=('ballotpedia',)
@@ -118,10 +119,12 @@ for human in congressman:
   youtube=(None,)
   img_src=(None,)
   questionnaire_response=(None,)
+  #TODO: NH primary election 9/13, their candidate will have null value here
+  gen_election_candidate=(None,)
 
   mesg=''
   for k,v in human.iteritems():
-    mesg += '(k,v)=('+k+' ,'+v+ ')\n'
+    mesg += '(k,v)=(' + k + ' ,' + str(v) + ')\n'
     if k == 'name':
       firstName = v.split()[0],
       lastName = v.split()[-1], 
@@ -146,15 +149,23 @@ for human in congressman:
       chamber = v,
     elif k == 'youtube':
       youtube = v,
+    elif k == 'incumbent':
+      incumbent = v,
+    elif k == 'gen_election_candidate':
+      gen_election_candidate = v,
 
   logging.debug(mesg)
   match_firstName = '%'+firstName[0]+'%',
   match_lastName = '%'+lastName[0]+'%',
-  insert_values = (firstName + lastName + prefix + suffix + party + chamber + state + district + incumbent + bioguideId + fecId + note + website + email + facebook + twitter + youtube + img_src + questionnaire_response)
-  update_values = (img_src + facebook + twitter + website + youtube + note + match_firstName + match_lastName + state + district)
+  insert_values = (firstName + lastName + prefix + suffix + party + chamber + state + district + incumbent + bioguideId + fecId + note + website + email + facebook + twitter + youtube + img_src + questionnaire_response + gen_election_candidate)
+  update_values = (img_src + facebook + twitter + website + youtube + note + gen_election_candidate + incumbent + match_firstName + match_lastName + state + district)
 
   # Match with existing Sunlight data: lastName, first word of firstName, state and district
-  c.execute('SELECT count(*) FROM candidates where firstName like ? and lastName like ? and state = ? and district = ?;', match_firstName + match_lastName + state + district)
+  # no district for senate
+  c.execute('SELECT count(*) FROM candidates where firstName like ? and lastName like ? and state = ? ;', match_firstName + match_lastName + state )
+
+  # for house
+  #c.execute('SELECT count(*) FROM candidates where firstName like ? and lastName like ? and state = ? and district = ?;', match_firstName + match_lastName + state + district)
   obj = c.fetchone()
   if obj[0]:
     logging.info('update_values: %s', update_values)

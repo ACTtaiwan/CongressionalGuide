@@ -56,6 +56,10 @@ ROBOTSTXT_OBEY = True
 #    'cand.middlewares.MyCustomDownloaderMiddleware': 543,
 #}
 
+DOWNLOAD_HANDLERS = {
+  's3': None,
+}
+
 # Enable or disable extensions
 # See http://scrapy.readthedocs.org/en/latest/topics/extensions.html
 #EXTENSIONS = {
