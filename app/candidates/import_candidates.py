@@ -4,7 +4,7 @@ import logging, sys
 from collections import defaultdict
 
 #
-# This script dump candidates information from filename.json into our sqlite3 database
+# This script moves candidate information from filename.json into the sqlite3 database
 #
 # CREATE TABLE candidates (firstName TEXT, lastName TEXT, prefix TEXT, suffix TEXT, party TEXT, chamber TEXT, state TEXT, district INTEGER, incumbent INTEGER, source TEXT, bioguideId TEXT, fecId TEXT, website TEXT, email TEXT, facebook TEXT, twitter TEXT, youtube TEXT, img_src TEXT, questionnaire_response TEXT, gen_election_candidate INTEGER);
 
@@ -69,7 +69,7 @@ def getStateAbbr(s):
     print 'key ' + s + ' not found!'
     return None
 
-dbpath = '/root/CongressionalGuide/db/db.sqlite3'
+dbpath = '../../db/db.sqlite3'
 if not (dbpath and os.path.isfile(dbpath)):
   print 'db file not found'
   exit() 
@@ -82,9 +82,8 @@ except sqlite3.Error:
   db.close()
 
 
-#jsonpath = '/root/CongressionalGuide/app/candidates/WA.json'
-#jsonpath = '/root/CongressionalGuide/app/candidates/gen_senate.json'
-jsonpath = '/root/CongressionalGuide/app/candidates/gen_house2.json'
+#jsonpath = '/root/CongressionalGuide/app/candidates/import.json'
+jsonpath = str(sys.argv[1])
 if not (jsonpath and os.path.isfile(jsonpath)):
   print 'candidates json file not found'
   exit()

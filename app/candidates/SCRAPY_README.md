@@ -19,7 +19,7 @@ Since the container doesn't provide any persistence, we can use the volumes (-v)
 The `-e` env variable tells Python not to create .pyc files.
 
 ## Getting Candidates Data
-To run any of these commands below using the Scrapy container, place `$ docker run -v $(pwd):/runtime/app -e PYTHONDONTWRITEBYTECODE=1 aciobanu/scrapy` before it. For example `$ docker run -v $(pwd):/runtime/app -e PYTHONDONTWRITEBYTECODE=1 aciobanu/scrapy list` to list available spiders.
+To run any of these commands below (including the detailed steps) using the Scrapy container, place `$ docker run -v $(pwd):/runtime/app -e PYTHONDONTWRITEBYTECODE=1 aciobanu/scrapy` before it (w/o 'scrapy' again). For example `$ docker run -v $(pwd):/runtime/app -e PYTHONDONTWRITEBYTECODE=1 aciobanu/scrapy list` to list available spiders.
 
 - To run scrapy:
 `scrapy crawl <spider name>`
@@ -34,3 +34,11 @@ To run any of these commands below using the Scrapy container, place `$ docker r
 	* Spider1: parse out state links
 	* Spider2: parse the majority of candidate
 	* Spider4: (Senate Only) parse FL, NH as they have different html layout
+
+### Steps
+Follow these steps to get candidate data and import to the DB.  
+1. Get General Election Senate candidates: `scrapy crawl senate-GeneralElectionCandidatesInfo -o genElect_senate.json`  
+2. Get General Election House candidates: `scrapy crawl house-GeneralElectionCandidatesInfo -o genElect_house.json`  
+3. Import Senate candidates to the DB: `python import_candidates.py genElect_senate.json`  
+4. Import House candidates to the DB: `python import_candidates.py genElect_house.json`  
+
