@@ -42,8 +42,6 @@ var TAIWAN_RELEVANT_BILLS = {
     }
 };
 
-Parse.initialize("PqNXb0zT1antU2yTXGg6EQltjjJAm2GUWqljxbtE", "3dbk6n78jFXe68CUHVPpJVOwVX2DX7UpfIuYL8oh");
-
 var incumbent_with_challenger_tpl = _.template($("#incumbent-with-challenger-tpl").html());
 
 function getLocation(zip, address) {
@@ -122,52 +120,6 @@ function getDistrict(location) {
 //         }
 //     });
 //     return sortByDistrict(reps);
-// }
-
-// function getSenatorCandidates(state) {
-//     var challengers = [];
-//     $.ajax('http://localhost:8080/candidates', {
-//     //$.ajax('https://api.parse.com/1/classes/Challenger', {
-//         type: 'GET',
-//         contentType: 'application/json',
-//         headers: {
-//             'X-Parse-Application-Id': 'PqNXb0zT1antU2yTXGg6EQltjjJAm2GUWqljxbtE',
-//             'X-Parse-REST-API-Key': '[apikey]'
-//         },
-//         data: {
-//             state: state,
-//             chamber: 'senate'
-//         },
-//         async: false,
-//         success: function(data) {
-//             challengers = data.results;
-//         }
-//     });
-//     return challengers;
-// }
-
-// function getRepCandidates(state, district) {
-//     var challengers = [];
-//     var query = {};
-//     query['state'] = state;
-//     query['chamber'] = 'house';
-//     if (district) {
-//         query['district'] = parseInt(district);
-//     }
-//     $.ajax('https://api.parse.com/1/classes/Challenger', {
-//         type: 'GET',
-//         contentType: 'application/json',
-//         headers: {
-//             'X-Parse-Application-Id': 'PqNXb0zT1antU2yTXGg6EQltjjJAm2GUWqljxbtE',
-//             'X-Parse-REST-API-Key': '[apikey]'
-//         },
-//         data: 'where=' + JSON.stringify(query),
-//         async: false,
-//         success: function(data) {
-//             challengers = data.results;
-//         }
-//     });
-//     return sortByDistrict(challengers);
 // }
 
 function getSenatorCandidates(state) {
