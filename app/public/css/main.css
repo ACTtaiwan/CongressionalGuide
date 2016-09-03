@@ -92,6 +92,10 @@ h1{
 	padding-right:0px;
 }
 
+.top-buffer{ 
+	margin-top:20px; 
+}
+
 #light-blue{
 	color: rgba(0, 0, 0, 0.6);
 }
