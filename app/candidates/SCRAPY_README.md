@@ -1,5 +1,10 @@
+# Updating Candidate Information
+The process to update candidate information in the DB (and show on the UI) is manual at this time.  
+1. Run the Scrapy commands to get candidate date into the JSON files.
+2. Run the `import_candidates.py` python script to load the JSON data to the DB.
+
 # Scrapy Instructions
-The easiest way to use scrapy locally is with the Scrapy Docker Container.
+The easiest way to use Scrapy locally is with the Scrapy Docker Container.
 
 ## Running the Scrapy Container
 Container info is on the Docker Hub for [aciobanu/scrapy](https://hub.docker.com/r/aciobanu/scrapy/).
@@ -11,7 +16,7 @@ For a list of scrapy commands, simply run:
 
 Since the container doesn't provide any persistence, we can use the volumes (-v) directive to share the current folder with the container.
 
-The env variable passed tells Python not to create .pyc files.
+The `-e` env variable tells Python not to create .pyc files.
 
 ## Getting Candidates Data
 To run any of these commands below using the Scrapy container, place `$ docker run -v $(pwd):/runtime/app -e PYTHONDONTWRITEBYTECODE=1 aciobanu/scrapy` before it. For example `$ docker run -v $(pwd):/runtime/app -e PYTHONDONTWRITEBYTECODE=1 aciobanu/scrapy list` to list available spiders.
@@ -28,7 +33,4 @@ To run any of these commands below using the Scrapy container, place `$ docker r
 - Use the different spiders for following purposes:
 	* Spider1: parse out state links
 	* Spider2: parse the majority of candidate
-	* Spider4: parse FL, NH as they have different html layout
-
-### Note:
-NY senators can have multiple party affiliations, see the [Ballotpedia page](https://ballotpedia.org/United_States_Senate_election_in_New_York,_2016)
+	* Spider4: (Senate Only) parse FL, NH as they have different html layout

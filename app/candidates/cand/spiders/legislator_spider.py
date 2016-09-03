@@ -3,16 +3,18 @@ import logging, sys
 from cand.items import CandItem
 
 # This script contains spiders to crawl different page from ballotpedia.org
-# Spider1 parse out state links
-# Spider2 parse the majority of candidate (except: CA, LA, NH, WA)
-# Spider3 parse only general election candidates (inconsistent table number)
-# Spider4 pase FL, NH as they have different html layout
+# Spider1: parse out state links
+# Spider2: parse the majority of candidate (except: FL, NH for Senate)
+# Spider3: parse only general election candidates (inconsistent table number)
+# Spider4: (Senate Only) parse FL, NH as they have different html layout
 
 # Note: NY senators have multiple party
 # https://ballotpedia.org/United_States_Senate_election_in_New_York,_2016
 
+# This spider needs more work to actually output the JSON file - only prints to console now
 class SenateSpider1(scrapy.Spider):
-    name = "senate1"
+    name = "senate-StateURLs"
+    # use the output for the start_urls for other Senate spiders
     allowed_domains = ["ballotpedia.org"]
     start_urls = ["https://ballotpedia.org/United_States_Congress_elections,_2016"]
 
@@ -23,7 +25,7 @@ class SenateSpider1(scrapy.Spider):
             print i+1, url 
 
 class SenateSpider2(scrapy.Spider):
-    name = "senate2"
+    name = "senate-AllCandidatesInfo"
     allowed_domains = ["ballotpedia.org"]
     #start_urls = ["https://ballotpedia.org/United_States_Senate_election_in_California,_2016"]
     start_urls = ["https://ballotpedia.org/United_States_Senate_election_in_Alabama,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Alaska,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Arizona,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Arkansas,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_California,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Colorado,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Connecticut,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Georgia,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Hawaii,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Idaho,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Illinois,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Indiana,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Iowa,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Kansas,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Kentucky,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Louisiana,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Maryland,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Missouri,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Nevada,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_New_York,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_North_Carolina,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_North_Dakota,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Ohio,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Oklahoma,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Oregon,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Pennsylvania,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_South_Carolina,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_South_Dakota,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Utah,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Vermont,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Washington,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Wisconsin,_2016"]
@@ -62,7 +64,7 @@ class SenateSpider2(scrapy.Spider):
             logging.info('pic: %s', p.extract())
             break 
 
-        # Put district number 0 for senators so that later we use this to match sunlight's candidate data
+        # District number 0 for senators to match Sunlight candidate data
         if item['chamber'] == 'S':
             logging.debug('setting senate district 0')
             item['dist'] = '0'
@@ -122,7 +124,7 @@ class SenateSpider2(scrapy.Spider):
         yield item
 
 class SenateSpider3(scrapy.Spider):
-    name = "senate3"
+    name = "senate-GeneralElectionCandidatesInfo"
     allowed_domains = ["ballotpedia.org"]
     #start_urls = ["https://ballotpedia.org/United_States_Senate_election_in_Florida,_2016"]
     start_urls = ["https://ballotpedia.org/United_States_Senate_election_in_Florida,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Alabama,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Alaska,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Arizona,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Arkansas,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_California,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Colorado,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Connecticut,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Georgia,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Hawaii,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Idaho,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Illinois,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Indiana,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Iowa,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Kansas,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Kentucky,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Louisiana,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Maryland,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Missouri,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Nevada,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_New_York,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_North_Carolina,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_North_Dakota,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Ohio,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Oklahoma,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Oregon,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Pennsylvania,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_South_Carolina,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_South_Dakota,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Utah,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Vermont,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Washington,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Wisconsin,_2016"]
@@ -151,13 +153,13 @@ class SenateSpider3(scrapy.Spider):
 # sameple urls
 #start_urls=["https://ballotpedia.org/Patty_Murray" ,"https://ballotpedia.org/Chris_Vance" ,"https://ballotpedia.org/Phil_Cornell" ,"https://ballotpedia.org/Mohammad_Said" ,"https://ballotpedia.org/Thor_Amundson" ,"https://ballotpedia.org/Uncle_Mover" ,"https://ballotpedia.org/Eric_John_Makus" ,"https://ballotpedia.org/Scott_Nazarino" ,"https://ballotpedia.org/Mike_Luke" ,"https://ballotpedia.org/Sam_Wright_(Washington)" ,"https://ballotpedia.org/Zach_Haller" ,"https://ballotpedia.org/Donna_Rae_Lands" ,"https://ballotpedia.org/Alex_Tsimerman" ,"https://ballotpedia.org/Pano_Churchill" ,"https://ballotpedia.org/Ted_Cummings" ,"https://ballotpedia.org/Chuck_Jackson" ,"https://ballotpedia.org/Jeremy_Teuton"] 
 
-# spider3 applies to FL
+
+# spider3 applies to FL & NH for Senate
 # Different layout for FL, and NH. Had to hardcode the xpath here
 class SenateSpider4(scrapy.Spider):
-    name = "senate4"
+    name = "senate-Special_FL_NH"
     allowed_domains = ["ballotpedia.org"]
     start_urls = ["https://ballotpedia.org/United_States_Senate_election_in_New_Hampshire,_2016"]
-                 #
 
     def __init__(self):
         self.S2 = SenateSpider2()
@@ -191,7 +193,7 @@ class SenateSpider4(scrapy.Spider):
 
 
 class HouseSpider1(scrapy.Spider):
-    name = "house1"
+    name = "house-StateURLs"
     allowed_domains = ["ballotpedia.org"]
     start_urls = ["https://ballotpedia.org/United_States_Congress_elections,_2016"]
 
@@ -200,8 +202,8 @@ class HouseSpider1(scrapy.Spider):
             url = response.urljoin(href)
             print i+1, url 
 
-class HouseSpider2(scrapy.Spider):
-    name = "house2"
+class HouseSpider3(scrapy.Spider):
+    name = "house-GeneralElectionCandidatesInfo"
     allowed_domains = ["ballotpedia.org"]
     #start_urls = ["https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Washington,_2016"]
     start_urls = ["https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Alabama,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Alaska,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Arizona,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Arkansas,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_California,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Colorado,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Connecticut,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Delaware,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Florida,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Georgia,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Hawaii,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Idaho,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Illinois,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Indiana,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Iowa,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Kansas,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Kentucky,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Louisiana,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Maine,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Maryland,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Massachusetts,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Michigan,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Minnesota,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Mississippi,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Missouri,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Montana,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Nebraska,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Nevada,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_New_Hampshire,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_New_Jersey,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_New_Mexico,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_New_York,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_North_Carolina,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_North_Dakota,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Ohio,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Oklahoma,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Oregon,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Pennsylvania,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Rhode_Island,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_South_Carolina,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_South_Dakota,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Tennessee,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Texas,_2014", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Utah,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Vermont,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Virginia,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Washington,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_West_Virginia,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Wisconsin,_2016", "https://ballotpedia.org/United_States_House_of_Representatives_elections_in_Wyoming,_2016"]

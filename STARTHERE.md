@@ -34,4 +34,4 @@ phpLiteAdmin is a web-based SQLite database admin tool written in PHP with suppo
 The SQLite DB is mounted inside the containers from `/db/db.sqlite3`. You can interact directly with the DB on your local drive and those changes should show in the app.
 
 ## Candidate Information
-The candidate information comes from the Scrapy spiders. See the [Scrapy Readme](app/candidates/SCRAPY_README.md) for details.
+The candidate information comes from the Scrapy spiders and is run manually to update and populate the DB. See the [Scrapy Readme](app/candidates/SCRAPY_README.md) for details.
