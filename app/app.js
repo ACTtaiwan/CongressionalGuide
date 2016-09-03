@@ -31,11 +31,14 @@ db.serialize(function() {
   db.run('CREATE TABLE IF NOT EXISTS candidates(' +
     'firstName TEXT, ' +
     'lastName TEXT, ' +
+    'prefix TEXT, ' +
+    'suffix TEXT, ' +
     'party TEXT, ' +
     'chamber TEXT, ' +
     'state TEXT, ' +
-    'district INT, ' +
-    'incumbent BOOLEAN, ' +
+    'district INTEGER, ' +
+    'incumbent INTEGER, ' +
+    'source TEXT, ' +
     'bioguideId TEXT,' +
     'fecId TEXT,' +
     'website TEXT,' +
@@ -43,8 +46,9 @@ db.serialize(function() {
     'facebook TEXT,' +
     'twitter TEXT,' +
     'youtube TEXT,' +
-    'note BLOB,' +
-    'questionnaire_response BLOB' +
+    'img_src TEXT, ' +
+    'questionnaire_response TEXT,' +
+    'gen_election_candidate INTEGER' +
     ')');
 
   db.run('CREATE TABLE IF NOT EXISTS bills(' +
