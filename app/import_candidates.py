@@ -82,10 +82,9 @@ except sqlite3.Error:
   db.close()
 
 
-#jsonpath = '/root/CongressionalGuide/app/candidates/FL.json'
-jsonpath = '/root/CongressionalGuide/app/candidates/gen_senate.json'
-#jsonpath = '/root/CongressionalGuide/app/candidates/senate.json'
-#jsonpath = '/root/CongressionalGuide/app/candidates/house.json'
+#jsonpath = '/root/CongressionalGuide/app/candidates/WA.json'
+#jsonpath = '/root/CongressionalGuide/app/candidates/gen_senate.json'
+jsonpath = '/root/CongressionalGuide/app/candidates/gen_house2.json'
 if not (jsonpath and os.path.isfile(jsonpath)):
   print 'candidates json file not found'
   exit()
