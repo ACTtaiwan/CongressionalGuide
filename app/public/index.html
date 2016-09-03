@@ -39,228 +39,232 @@
         js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=194392997310957&version=v2.0";
         fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));</script>
-    
-    <div class="container-fluid">
-        <!-- main jumbotron for a primary marketing message or call to action -->
-        <div id="data-entry-wrapper">
-            <div class="container">
-                <div class="row">
-                    <div class="col-xs-12">
-                        <h1>Congressional Guide</h1>
-                        <p>Enter your street address and zip code to see who is running your district.</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <ul class="nav nav-tabs">
-                        <li role="presentation" class="active"><a href="#address" data-toggle="tab">Addresss and Zip Code</a></li>
-                        <li role="presentation"><a href="#district" data-toggle="tab">State and District</a></li>
-                    </ul>
-                    <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane active" id="address">
-                            <div class="col-xs-12 col-lg-6">
-                                <div class="input-group input-field">
-                                    <span class="input-group-addon">Address</span>
-                                    <input type="text" class="form-control" placeholder="123 Any Street Ave." name="street">
-                                </div>
-                                <div class="input-group input-field">
-                                    <span class="input-group-addon">Zip Code</span>
-                                    <input id="zipcode" type="text" class="form-control" placeholder="Zip Code" name="zipcode">
-                                </div>
-                            </div>
-                        </div>
-                        <div role="tabpanel" class="tab-pane" id="district">
-                            <div class="col-xs-12 col-lg-6">
-                                <select class="form-control input-field" name="state">
-                                    <option value=""></option>
-                                    <option value="AL">Alabama</option>
-                                    <option value="AK">Alaska</option>
-                                    <option value="AZ">Arizona</option>
-                                    <option value="AR">Arkansas</option>
-                                    <option value="CA">California</option>
-                                    <option value="CO">Colorado</option>
-                                    <option value="CT">Connecticut</option>
-                                    <option value="DE">Delaware</option>
-                                    <option value="DC">District Of Columbia</option>
-                                    <option value="FL">Florida</option>
-                                    <option value="GA">Georgia</option>
-                                    <option value="HI">Hawaii</option>
-                                    <option value="ID">Idaho</option>
-                                    <option value="IL">Illinois</option>
-                                    <option value="IN">Indiana</option>
-                                    <option value="IA">Iowa</option>
-                                    <option value="KS">Kansas</option>
-                                    <option value="KY">Kentucky</option>
-                                    <option value="LA">Louisiana</option>
-                                    <option value="ME">Maine</option>
-                                    <option value="MD">Maryland</option>
-                                    <option value="MA">Massachusetts</option>
-                                    <option value="MI">Michigan</option>
-                                    <option value="MN">Minnesota</option>
-                                    <option value="MS">Mississippi</option>
-                                    <option value="MO">Missouri</option>
-                                    <option value="MT">Montana</option>
-                                    <option value="NE">Nebraska</option>
-                                    <option value="NV">Nevada</option>
-                                    <option value="NH">New Hampshire</option>
-                                    <option value="NJ">New Jersey</option>
-                                    <option value="NM">New Mexico</option>
-                                    <option value="NY">New York</option>
-                                    <option value="NC">North Carolina</option>
-                                    <option value="ND">North Dakota</option>
-                                    <option value="OH">Ohio</option>
-                                    <option value="OK">Oklahoma</option>
-                                    <option value="OR">Oregon</option>
-                                    <option value="PA">Pennsylvania</option>
-                                    <option value="RI">Rhode Island</option>
-                                    <option value="SC">South Carolina</option>
-                                    <option value="SD">South Dakota</option>
-                                    <option value="TN">Tennessee</option>
-                                    <option value="TX">Texas</option>
-                                    <option value="UT">Utah</option>
-                                    <option value="VT">Vermont</option>
-                                    <option value="VA">Virginia</option>
-                                    <option value="WA">Washington</option>
-                                    <option value="WV">West Virginia</option>
-                                    <option value="WI">Wisconsin</option>
-                                    <option value="WY">Wyoming</option>
-                                </select>
-                                <div>
-                                    <div class="input-group input-field">
-                                        <span class="input-group-addon">District</span>
-                                        <input type="text" class="form-control" placeholder="District" name="district">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-                <div class="row">
-                    <div class="col-xs-12">
-                        <a id="submit-btn" class="btn btn-primary btn-lg" role="button">Search</a>
-                        <img id="loading-icon" src="img/loadingIcon.gif"/>
-                        <span id="error-msg">Please fill the information in red box</span>
-                    </p>
-                </div>
-            </div>
+<div class="section">    
+    <div class="container-fluid" id="data-entry-wrapper">
+		<div class="row">
+			<div class="col-md-12">
+				 <div class="jumbotron">
+					<h1>Congressional Guide</h1>
+					<p>Enter your street address and zip code to see who 
+						is running your district.</p>
+				</div>
+			</div>
         </div>
-        <div id="main" class="container-fluid">
-            <div class="jumbotron bg-success">
-                <div class="row p-b-3">
-                    <h2>Senate <span class="text-danger">Candidates</span></h2>
-                </div>
-                <div id="senator_row"></div>
-            </div>
-
-            <div class="jumbotron bg-warning">
-                <div class="row p-b-3">
-                    <h2>Representative <span class="text-danger">Candidates</span></h2>
-                </div>
-                <div id="reps_row"></div>
-            </div>
-        </div> <!-- /#main -->
-
-    </div>
-
-    <script type="text/template" id="incumbent-with-challenger-tpl">
-        <% var candidate_tpl = _.template($("#candidate-tpl").html());%>
-        <% _.each(candidates, function(candidate) { %>
-            <% if(_.indexOf(candidates, candidate) % 2 === 0) { %>
-                <div class="row">
-                    <div class="col-xs-6">
-                        <%= candidate_tpl({candidate: candidate, role: "Incumbent"})%>
-                    </div>
-            <% } else { %>
-                    <div class="col-xs-6">
-                        <%= candidate_tpl({candidate: candidate, role: "Challenger"})%>
-                    </div>
-                </div>
-            <% } %>
-        <% }) %>
-
-        <% if(candidates.length % 2 !== 0) { %>
-                </div>
-        <% } %>
-    </script>
-
-    <script type="text/template" id="candidate-tpl">
         <div class="row">
-            <div class="col-xs-6">
-		<% if(candidate.img_src === null) candidate.img_src =  "./img/default-img.png"%>
-                <img class="img-responsive" src="<%=candidate.img_src%>"/>
-            </div>
-            <div class="col-xs-6">
-                <h4 class="text-danger"><%= candidate.incumbent ? 'Incumbent' : 'Challenger' %></h4>
-                <h4><%=candidate.firstName + ' ' + candidate.lastName%></h4>
-                <h4><%if(candidate.party === 'R'){%>
-                        Republican
-                    <%}else if(candidate.party === 'D'){%>
-                        Democratic
-                    <%}else{%>
-                        Independent
-                    <%}%>
-                </h4>
-                <div>
-                    <%if(candidate.website){%>
-                    <a href="<%=candidate.website%>" target="_blank"><img class="social-icon" src="./img/colored/link.png"/></a>
-                    <%}%>
-                    <%if(candidate.email){%>
-                    <a href="mailto:<%=candidate.email%>?body=Dear <%=candidate.firstName + ' ' + candidate.lastName%>,%0D%0A" target="_blank"><img class="social-icon" src="./img/colored/email.png"/></a>
-                    <%}%>
-                    <%if(candidate.facebook){%>
-                    <a href="http://www.facebook.com/<%=candidate.facebook%>" target="_blank"><img class="social-icon" src="./img/colored/facebook.png"/></a>
-                    <%}%>
-                    <%if(candidate.twitter){%>
-                    <a href="http://www.twitter.com/<%=candidate.twitter%>" target="_blank"><img class="social-icon" src="./img/colored/twitter.png"/></a>
-                    <%}%>
-                    <%if(candidate.youtube){%>
-                    <a href="http://www.youtube.com/<%=candidate.youtube%>" target="_blank"><img class="social-icon" src="./img/colored/youtube.png"/></a>
-                    <%}%>
+            <ul class="nav nav-tabs">
+            	<li role="presentation" class="active">
+                    <a href="#address" data-toggle="tab">Addresss and Zip Code</a></li>
+                <li role="presentation"><a href="#district" data-toggle="tab">
+                	State and District</a></li>
+            </ul>
+            <div class="tab-content">
+            	<div role="tabpanel" class="tab-pane active" id="address">
+                    <div class="col-md-12 col-lg-6">
+                        <div class="input-group input-field">
+                            <span class="input-group-addon">Address</span>
+                            <input type="text" class="form-control" 
+                            	placeholder="123 Any Street Ave." name="street">
+                        </div>
+                    	<div class="input-group input-field">
+                            <span class="input-group-addon">Zip Code</span>
+                            <input id="zipcode" type="text" class="form-control" 
+                            	placeholder="Zip Code" name="zipcode">
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="district">
+					<div class="col-md-12 col-lg-6">
+						<select class="form-control input-field" name="state">
+							<option value=""></option>
+							<option value="AL">Alabama</option>
+							<option value="AK">Alaska</option>
+							<option value="AZ">Arizona</option>
+							<option value="AR">Arkansas</option>
+							<option value="CA">California</option>
+							<option value="CO">Colorado</option>
+							<option value="CT">Connecticut</option>
+							<option value="DE">Delaware</option>
+							<option value="DC">District Of Columbia</option>
+							<option value="FL">Florida</option>
+							<option value="GA">Georgia</option>
+							<option value="HI">Hawaii</option>
+							<option value="ID">Idaho</option>
+							<option value="IL">Illinois</option>
+							<option value="IN">Indiana</option>
+							<option value="IA">Iowa</option>
+							<option value="KS">Kansas</option>
+							<option value="KY">Kentucky</option>
+							<option value="LA">Louisiana</option>
+							<option value="ME">Maine</option>
+							<option value="MD">Maryland</option>
+							<option value="MA">Massachusetts</option>
+							<option value="MI">Michigan</option>
+							<option value="MN">Minnesota</option>
+							<option value="MS">Mississippi</option>
+							<option value="MO">Missouri</option>
+							<option value="MT">Montana</option>
+							<option value="NE">Nebraska</option>
+							<option value="NV">Nevada</option>
+							<option value="NH">New Hampshire</option>
+							<option value="NJ">New Jersey</option>
+							<option value="NM">New Mexico</option>
+							<option value="NY">New York</option>
+							<option value="NC">North Carolina</option>
+							<option value="ND">North Dakota</option>
+							<option value="OH">Ohio</option>
+							<option value="OK">Oklahoma</option>
+							<option value="OR">Oregon</option>
+							<option value="PA">Pennsylvania</option>
+							<option value="RI">Rhode Island</option>
+							<option value="SC">South Carolina</option>
+							<option value="SD">South Dakota</option>
+							<option value="TN">Tennessee</option>
+							<option value="TX">Texas</option>
+							<option value="UT">Utah</option>
+							<option value="VT">Vermont</option>
+							<option value="VA">Virginia</option>
+							<option value="WA">Washington</option>
+							<option value="WV">West Virginia</option>
+							<option value="WI">Wisconsin</option>
+							<option value="WY">Wyoming</option>
+						</select>
+                    	<div class="input-group input-field">
+							<span class="input-group-addon">District</span>
+							<input type="text" class="form-control" placeholder="District" 	
+								name="district">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-            <div class="row">
-        	<% if (candidate.incumbent) {%>
-                	<div id="supportedbill">
-			<h4 class ="font-weight-bold">Taiwan Bills Supported:<%=candidate.bills.length%></h4>
-				<table>
-				<%for(var i = 0; i < candidate.bills.length; ++i){%>
-				<tr>
-					<td><a href="<%=candidate.bills[i].url%>"><%=i+1%>. <%=candidate.bills[i].title%></a>
-					</td>
-				</tr>
-				<%}%>
-				</table>
-			</div>
-  	    	<% } %>
-		<!-- TODO: Note display -->
-
-			<div id="questionnaire" class="questionnaire-box">
-	                	<h4 class ="font-weight-bold">Questionnaire</h4	>
-				<p>Ask the <font color="red">candidate</font> to answer the questionnaire on their support for Taiwan. <br><a href="http://www.americancitizensfortaiwan.org/congressional_candidate_questionnaire">See the questionnaire.</a></p>
-			<table class="questionnaire-table">
-				<tr>
-				<%if(!candidate.questionnaire_response){%>
-					<%if(candidate.twitter){%>
-						<td><a href="http://www.twitter.com/intent/tweet?screen_name=<%=candidate.twitter%>&text=Will you support our important trade and security ally Taiwan? Please answer the questions at http://ACTtaiwan.org/q" target="_blank"><img class="social-icon questionnaire-button" src="./img/colored/twitter.png"/>Ask via Twitter</a></td>
-						<%}%>
-					 <%if(candidate.email){%>
-						<td><a href="mailto:<%=candidate.email%>?subject=Will you support our important trade and security ally Taiwan? Please let us know your stand&body=Dear <%=candidate.firstName%> <%=candidate.lastName%>,%0D%0A%0D%0AAs you may know, Taiwan is a very important partner and ally to the U.S. In 2015, the U.S. exported $25.86 billion to Taiwan, worth over 150,000 jobs. Taiwan is also a key part of the Asia-Pacific security sphere; if Communist China were to take over Taiwan, Beijing would finally have access to a blue-water port to launch its submarines undetected into the Pacific.%0D%0A%0D%0AWe are very concerned that the U.S. continues to work in strengthening the enduring bonds between the American and Taiwanese peoples. We want our elected representatives to support self-determination and the protection of democracy for Taiwan, as these will protect American interests in Asia.%0D%0A%0D%0AWill you please complete the American Citizens for Taiwan Candidate Questionnaire at http%3A%2F%2Famericancitizensfortaiwan.org%2Fq. The answers will be posted publicly at http%3A%2F%2Famericancitizensfortaiwan.org%2Fcongressional-guide and widely distributed via the web, social media, mailing lists, and at public events.%0D%0A%0D%0AThank you.%0D%0A"><img class="social-icon questionnaire-button" src="./img/colored/email.png"/>Ask via email</a>
-</td>
-					<%}%>
-				<%}else{%>
-					<%if(candidate.twitter){%>
-					<td><a href="http://www.twitter.com/intent/tweet?screen_name=<%=candidate.twitter%>&text= Response: <%candidate.questionnaire_response%>" target="_blank"><img class="social-icon questionnaire-button" src="./img/colored/twitter.png">Share via Twitter</a></td>
-					<%}%>
-					<%if(candidate.email){%>
-					<!--TODO: The share link need to be refined-->
-					<td><a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.americancitizensfortaiwan.org%2F&display=popup&ref=plugin&src=like&app_id=126739610711965" target="blank"><img class="social-icon questionnaire-button" src="./img/colored/facebook.png">Share via Facebook</a></td>
-					<%}%>
-				<%}%>
-				</tr>
-			</table>
-			</div>
+        <div class="row">
+        	<div class="col-md-12">
+                <a id="submit-btn" class="btn btn-primary btn-lg" role="button">Search</a>
+                <img id="loading-icon" src="img/loadingIcon.gif"/>
+                <span id="error-msg">Please fill the information in red box</span>
             </div>
-    </script>
+        </div>
+    </div>
+</div>
+<div class="section top-buffer">
+	<div id="main" class="container-fluid">
+		<div class="jumbotron bg-success">
+			<div class="row p-b-3">
+				<h2>Senate <span class="text-danger">Candidates</span></h2>
+			</div>
+			<div id="senator_row"></div>
+		</div>
+
+		<div class="jumbotron bg-warning">
+			<div class="row p-b-3">
+				<h2>Representative <span class="text-danger">Candidates</span></h2>
+			</div>
+			<div id="reps_row"></div>
+		</div>
+	</div>
+</div>
+
+<script type="text/template" id="incumbent-with-challenger-tpl">
+	<% var candidate_tpl = _.template($("#candidate-tpl").html());%>
+	<% _.each(candidates, function(candidate) { %>
+		<% if(_.indexOf(candidates, candidate) % 2 === 0) { %>
+			<div class="row top-buffer" id="candidate row">
+				<div class="col-md-6">
+					<%= candidate_tpl({candidate: candidate, role: "Incumbent"})%>
+				</div>
+		<% } else { %>
+				<div class="col-md-6">
+					<%= candidate_tpl({candidate: candidate, role: "Challenger"})%>
+				</div>
+			</div>
+		<% } %>
+	<% }) %>
+
+	<% if(candidates.length % 2 !== 0) { %>
+			</div>
+	<% } %>
+</script>
+
+<script type="text/template" id="candidate-tpl">
+	<div class="row" id="photo info">
+		<div class="col-xs-6">
+			<% if(candidate.img_src === null) candidate.img_src = 
+				 "./img/default-img.png"%>
+			<img class="limit-h" src="<%=candidate.img_src%>"/>
+		</div>
+		<div class="col-xs-6">
+			<h4 class="text-danger"><%= candidate.incumbent ? 'Incumbent' : 'Challenger' %></h4>
+			<h4><%=candidate.firstName + ' ' + candidate.lastName%></h4>
+			<h4><%if(candidate.party === 'R'){%>
+					Republican
+				<%}else if(candidate.party === 'D'){%>
+					Democratic
+				<%}else{%>
+					Independent
+				<%}%>
+			</h4>
+			<div>
+				<%if(candidate.website){%>
+				<a href="<%=candidate.website%>" target="_blank"><img class="social-icon" src="./img/colored/link.png"/></a>
+				<%}%>
+				<%if(candidate.email){%>
+				<a href="mailto:<%=candidate.email%>?body=Dear <%=candidate.firstName + ' ' + candidate.lastName%>,%0D%0A" target="_blank"><img class="social-icon" src="./img/colored/email.png"/></a>
+				<%}%>
+				<%if(candidate.facebook){%>
+				<a href="<%=candidate.facebook%>" target="_blank"><img class="social-icon" src="./img/colored/facebook.png"/></a>
+				<%}%>
+				<%if(candidate.twitter){%>
+				<a href="http://www.twitter.com/<%=candidate.twitter%>" target="_blank"><img class="social-icon" src="./img/colored/twitter.png"/></a>
+				<%}%>
+				<%if(candidate.youtube){%>
+				<a href="<%=candidate.youtube%>" target="_blank"><img class="social-icon" src="./img/colored/youtube.png"/></a>
+				<%}%>
+			</div>
+		</div>
+	</div>
+		<div class="row">
+		<% if (candidate.incumbent) {%>
+				<div id="supportedbill">
+		<h4 class ="font-weight-bold">Taiwan Bills Supported:<%=candidate.bills.length%></h4>
+			<table>
+			<%for(var i = 0; i < candidate.bills.length; ++i){%>
+			<tr>
+				<td><a href="<%=candidate.bills[i].url%>"><%=i+1%>. <%=candidate.bills[i].title%></a>
+				</td>
+			</tr>
+			<%}%>
+			</table>
+		</div>
+		<% } %>
+	<!-- TODO: Note display -->
+
+		<div id="questionnaire" class="questionnaire-box">
+					<h4 class ="font-weight-bold">Questionnaire</h4	>
+			<p>Ask the <font color="red">candidate</font> to answer the questionnaire on their support for Taiwan. <br><a href="http://www.americancitizensfortaiwan.org/congressional_candidate_questionnaire">See the questionnaire.</a></p>
+		<table class="questionnaire-table">
+			<tr>
+			<%if(!candidate.questionnaire_response){%>
+				<%if(candidate.twitter){%>
+					<td><a href="http://www.twitter.com/intent/tweet?screen_name=<%=candidate.twitter%>&text=Will you support our important trade and security ally Taiwan? Please answer the questions at http://ACTtaiwan.org/q" target="_blank"><img class="social-icon questionnaire-button" src="./img/colored/twitter.png"/>Ask via Twitter</a></td>
+					<%}%>
+				 <%if(candidate.email){%>
+					<td><a href="mailto:<%=candidate.email%>?subject=Will you support our important trade and security ally Taiwan? Please let us know your stand&body=Dear <%=candidate.firstName%> <%=candidate.lastName%>,%0D%0A%0D%0AAs you may know, Taiwan is a very important partner and ally to the U.S. In 2015, the U.S. exported $25.86 billion to Taiwan, worth over 150,000 jobs. Taiwan is also a key part of the Asia-Pacific security sphere; if Communist China were to take over Taiwan, Beijing would finally have access to a blue-water port to launch its submarines undetected into the Pacific.%0D%0A%0D%0AWe are very concerned that the U.S. continues to work in strengthening the enduring bonds between the American and Taiwanese peoples. We want our elected representatives to support self-determination and the protection of democracy for Taiwan, as these will protect American interests in Asia.%0D%0A%0D%0AWill you please complete the American Citizens for Taiwan Candidate Questionnaire at http%3A%2F%2Famericancitizensfortaiwan.org%2Fq. The answers will be posted publicly at http%3A%2F%2Famericancitizensfortaiwan.org%2Fcongressional-guide and widely distributed via the web, social media, mailing lists, and at public events.%0D%0A%0D%0AThank you.%0D%0A"><img class="social-icon questionnaire-button" src="./img/colored/email.png"/>Ask via email</a>
+</td>
+				<%}%>
+			<%}else{%>
+				<%if(candidate.twitter){%>
+				<td><a href="http://www.twitter.com/intent/tweet?screen_name=<%=candidate.twitter%>&text= Response: <%candidate.questionnaire_response%>" target="_blank"><img class="social-icon questionnaire-button" src="./img/colored/twitter.png">Share via Twitter</a></td>
+				<%}%>
+				<%if(candidate.email){%>
+				<!--TODO: The share link need to be refined-->
+				<td><a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.americancitizensfortaiwan.org%2F&display=popup&ref=plugin&src=like&app_id=126739610711965" target="blank"><img class="social-icon questionnaire-button" src="./img/colored/facebook.png">Share via Facebook</a></td>
+				<%}%>
+			<%}%>
+			</tr>
+		</table>
+		</div>
+		</div>
+</script>
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
