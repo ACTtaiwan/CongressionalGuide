@@ -4,8 +4,8 @@ from cand.items import CandItem
 
 # This script contains spiders to crawl different page from ballotpedia.org
 # Spider1 parse out state links
-# Spider2 parse the majority of candidate
-# Spider3 parse only general election candidates
+# Spider2 parse the majority of candidate (except: CA, LA, NH, WA)
+# Spider3 parse only general election candidates (inconsistent table number)
 # Spider4 pase FL, NH as they have different html layout
 
 # Note: NY senators have multiple party
@@ -79,18 +79,15 @@ class SenateSpider2(scrapy.Spider):
             break
 
         logging.debug('grab incumbent...')
-        item['incumbent'] = False
+        item['incumbent'] = 0
         for l in response.xpath('//table[@class="infobox"]//td[contains(text(), "Incumbent")]'):
-            item['incumbent'] = True
+            item['incumbent'] = 1
             logging.info('is Incumbent!')
 
-        logging.debug('grab state...')
-        for l in response.xpath('//*[@id="bodyContent"]/a[contains(@href, "U.S._Senate_elections") or contains(@href, "United_States_Senate")] | //*[@id="bodyContent"]/p/a[contains(@href, "U.S._Senate_elections")]'):# this line is for you Patrick Murphy!
-            logging.debug('selector, node before state: %s', l)
-            h = l.xpath('following-sibling::a/@href').extract()[0][1:].replace('_',' ')
-            logging.info('state: %s', h)
-            item['state'] = h
-            break
+        # inconsistent format too
+        #for l in response.xpath('//*[@id="mw-content-text"]/table/tr[4]/td/text()').extract():
+        #    h = l.split(',')[1][1:]
+        #    item['state'] = h
 
         logging.debug('grab campaign website...')
         for l in response.xpath('//a[@class="external text" and contains(text() ,"Campaign")]/@href'):
@@ -120,9 +117,8 @@ class SenateSpider2(scrapy.Spider):
 class SenateSpider3(scrapy.Spider):
     name = "senate3"
     allowed_domains = ["ballotpedia.org"]
-    #start_urls = ["https://ballotpedia.org/United_States_Senate_election_in_Oklahoma,_2016"]
-    start_urls = ["https://ballotpedia.org/United_States_Senate_election_in_Oklahoma,_2016", "https://ballotpedia.org/United_States_Senate_election_in_Alabama,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Alaska,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Arizona,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Arkansas,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_California,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Colorado,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Connecticut,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Georgia,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Hawaii,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Idaho,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Illinois,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Indiana,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Iowa,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Kansas,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Kentucky,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Louisiana,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Maryland,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Missouri,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Nevada,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_New_York,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_North_Carolina,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_North_Dakota,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Ohio,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Oklahoma,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Oregon,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Pennsylvania,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_South_Carolina,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_South_Dakota,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Utah,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Vermont,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Washington,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Wisconsin,_2016"]
-
+    #start_urls = ["https://ballotpedia.org/United_States_Senate_election_in_Florida,_2016"]
+    start_urls = ["https://ballotpedia.org/United_States_Senate_election_in_Florida,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Alabama,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Alaska,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Arizona,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Arkansas,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_California,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Colorado,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Connecticut,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Georgia,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Hawaii,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Idaho,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Illinois,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Indiana,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Iowa,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Kansas,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Kentucky,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Louisiana,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Maryland,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Missouri,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Nevada,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_New_York,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_North_Carolina,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_North_Dakota,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Ohio,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Oklahoma,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Oregon,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Pennsylvania,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_South_Carolina,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_South_Dakota,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Utah,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Vermont,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Washington,_2016" ,"https://ballotpedia.org/United_States_Senate_election_in_Wisconsin,_2016"]
 
     def __init__(self):
         self.S2 = SenateSpider2()
@@ -130,7 +126,11 @@ class SenateSpider3(scrapy.Spider):
     def parse(self, response):
         i=1
         # select all <a> in general election candidates but not the party icon link
-        for h in response.xpath('//*[@id="bodyContent"]/table[3]/tr/td[2]/a[not(contains(@href, "Party"))]/@href').extract():
+        # WI: //*[@id="bodyContent"]/table[2]/tbody/tr/td[2]/a[2]
+        logging.info('url: %s', response.url)
+        state = response.url.split('in_')[1].split(',')[0].replace('_', ' ')
+        logging.info('state: %s', state)
+        for h in response.xpath("//table[contains(tr/td[2]/p[1]/b/big, 'General election candidates')]//a[not(contains(@href, 'Party') or contains(@href, '#cite_note') or contains(@href, 'Independent'))]/@href").extract():
             url = response.urljoin(h)
             logging.info('candidate url: %s', url)
             name = h.replace("_", " ")[1:] 
@@ -138,7 +138,8 @@ class SenateSpider3(scrapy.Spider):
             item['name'] = name
             item['url'] = url
             item['chamber'] = 'S'
-            item['gen_election_candidate'] = True
+            item['state'] = state
+            item['gen_election_candidate'] = 1 
             yield scrapy.Request(url, callback=self.S2.parse_cand, meta={'item':item}) 
 
 
@@ -151,7 +152,7 @@ class SenateSpider4(scrapy.Spider):
     name = "senate4"
     allowed_domains = ["ballotpedia.org"]
     start_urls = ["https://ballotpedia.org/United_States_Senate_election_in_New_Hampshire,_2016"]
-                 #"https://ballotpedia.org/United_States_Senate_election_in_Florida,_2016"
+                 #
 
     def __init__(self):
         self.S2 = SenateSpider2()
