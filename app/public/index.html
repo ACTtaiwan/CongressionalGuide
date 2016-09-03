@@ -186,11 +186,11 @@
 </script>
 
 <script type="text/template" id="candidate-tpl">
-	<div class="row">
+	<div class="row" id="photo info">
 		<div class="col-xs-6">
 			<% if(candidate.img_src === null) candidate.img_src = 
 				 "./img/default-img.png"%>
-			<img class="img-responsive" src="<%=candidate.img_src%>"/>
+			<img class="limit-h" src="<%=candidate.img_src%>"/>
 		</div>
 		<div class="col-xs-6">
 			<h4 class="text-danger"><%= candidate.incumbent ? 'Incumbent' : 'Challenger' %></h4>
@@ -211,13 +211,13 @@
 				<a href="mailto:<%=candidate.email%>?body=Dear <%=candidate.firstName + ' ' + candidate.lastName%>,%0D%0A" target="_blank"><img class="social-icon" src="./img/colored/email.png"/></a>
 				<%}%>
 				<%if(candidate.facebook){%>
-				<a href="http://www.facebook.com/<%=candidate.facebook%>" target="_blank"><img class="social-icon" src="./img/colored/facebook.png"/></a>
+				<a href="<%=candidate.facebook%>" target="_blank"><img class="social-icon" src="./img/colored/facebook.png"/></a>
 				<%}%>
 				<%if(candidate.twitter){%>
 				<a href="http://www.twitter.com/<%=candidate.twitter%>" target="_blank"><img class="social-icon" src="./img/colored/twitter.png"/></a>
 				<%}%>
 				<%if(candidate.youtube){%>
-				<a href="http://www.youtube.com/<%=candidate.youtube%>" target="_blank"><img class="social-icon" src="./img/colored/youtube.png"/></a>
+				<a href="<%=candidate.youtube%>" target="_blank"><img class="social-icon" src="./img/colored/youtube.png"/></a>
 				<%}%>
 			</div>
 		</div>

@@ -79,8 +79,15 @@ nav{}
 	margin-right:0px;
 }
 
+.limit-h{
+	max-height: 200px;
+	width: auto;
+	display: block; 
+}
+
 body > div.row{
-	margin-left: 0;margin-right:0;
+	margin-left: 0;
+	margin-right:0;
 }
 
 h1{
