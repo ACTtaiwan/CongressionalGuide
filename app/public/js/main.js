@@ -3,46 +3,6 @@ var REST_API_KEY = '[apikey]';
 
 var SUNLIGHT_APIKEY = '[apikey]';
 var SUNLIGHT_BILLS_URI = 'http://congress.api.sunlightfoundation.com/bills';
-var TAIWAN_RELEVANT_BILLS = {
-    "hres494-113": {
-        name: "H.Res. 494: Affirming the importance of the Taiwan Relations Act",
-        link: "https://beta.congress.gov/bill/113th-congress/house-resolution/494"
-    },
-    "hres185-113": {
-        name: "H.Res. 185: Taiwan Travel Act",
-        link: "http://beta.congress.gov/bill/113th-congress/house-resolution/185"
-    },
-    "hres419-113": {
-        name: "H.R. 419: The Taiwan Policy Act",
-        link: "https://beta.congress.gov/bill/113th-congress/house-bill/419"
-    },
-    "hr1151-113": {
-        name: "H.R. 1151: To direct the Secretary of State to develop a strategy to obtain observer status for Taiwan at the triennial International Civil Aviation Organization Assembly, and for other purposes ",
-        link: "https://beta.congress.gov/bill/113th-congress/house-bill/1151"
-    },
-    "hconres55-113": {
-        name: "H.Con.Res. 55: Expressing the sense of Congress that Taiwan and its 23,000,000 people deserve membership in the United Nations",
-        link: "https://beta.congress.gov/bill/113th-congress/house-concurrent-resolution/55"
-    },
-    "hconres29-113": {
-        name: "H.Con.Res. 29: Expressing the sense of Congress that the United States should resume normal diplomatic relations with Taiwan, and for other purposes ",
-        link: "https://beta.congress.gov/bill/113th-congress/house-concurrent-resolution/29"
-    },
-    "hr3470-113": {
-        name: "H.R.3470 - To affirm the importance of the Taiwan Relations Act, to provide for the transfer of naval vessels to certain foreign countries, and for other purposes.",
-        link: "https://beta.congress.gov/bill/113th-congress/house-bill/3470"
-    },
-    "s12-113": {
-        name: "S. 12: Naval Vessel Transfer Act of 2013",
-        link: "https://beta.congress.gov/bill/113th-congress/senate-bill/12"
-    },
-    "s579-113": {
-        name: "S. 579: A bill to direct the Secretary of State to develop a strategy to obtain observer status for Taiwan at the triennial International Civil Aviation Organization Assembly, and for other purposes",
-        link: "http://beta.congress.gov/bill/113th-congress/senate-bill/579"
-    }
-};
-
-Parse.initialize("PqNXb0zT1antU2yTXGg6EQltjjJAm2GUWqljxbtE", "3dbk6n78jFXe68CUHVPpJVOwVX2DX7UpfIuYL8oh");
 
 var incumbent_with_challenger_tpl = _.template($("#incumbent-with-challenger-tpl").html());
 
@@ -122,52 +82,6 @@ function getDistrict(location) {
 //         }
 //     });
 //     return sortByDistrict(reps);
-// }
-
-// function getSenatorCandidates(state) {
-//     var challengers = [];
-//     $.ajax('http://localhost:8080/candidates', {
-//     //$.ajax('https://api.parse.com/1/classes/Challenger', {
-//         type: 'GET',
-//         contentType: 'application/json',
-//         headers: {
-//             'X-Parse-Application-Id': 'PqNXb0zT1antU2yTXGg6EQltjjJAm2GUWqljxbtE',
-//             'X-Parse-REST-API-Key': '[apikey]'
-//         },
-//         data: {
-//             state: state,
-//             chamber: 'senate'
-//         },
-//         async: false,
-//         success: function(data) {
-//             challengers = data.results;
-//         }
-//     });
-//     return challengers;
-// }
-
-// function getRepCandidates(state, district) {
-//     var challengers = [];
-//     var query = {};
-//     query['state'] = state;
-//     query['chamber'] = 'house';
-//     if (district) {
-//         query['district'] = parseInt(district);
-//     }
-//     $.ajax('https://api.parse.com/1/classes/Challenger', {
-//         type: 'GET',
-//         contentType: 'application/json',
-//         headers: {
-//             'X-Parse-Application-Id': 'PqNXb0zT1antU2yTXGg6EQltjjJAm2GUWqljxbtE',
-//             'X-Parse-REST-API-Key': '[apikey]'
-//         },
-//         data: 'where=' + JSON.stringify(query),
-//         async: false,
-//         success: function(data) {
-//             challengers = data.results;
-//         }
-//     });
-//     return sortByDistrict(challengers);
 // }
 
 function getSenatorCandidates(state) {
@@ -305,7 +219,7 @@ $(function() {
 
         $loadingIcon.show();
 
-        var sentaorsDeferred = getSenatorCandidates(state);
+        var senatorsDeferred = getSenatorCandidates(state);
         var repsDeferred = getRepCandidates(state, district);
 	var bills = getBills();
 	var cosponsors = getCosponsor();
@@ -313,7 +227,7 @@ $(function() {
 	$("#senator_row").html("");
 	$("#reps_row").html("");
         // Feed information fetched from DB into UI
-        $.when(sentaorsDeferred, repsDeferred, bills, cosponsors).then(function(senatorsCallback, repsCallback, billsCallback, coCallback) {
+        $.when(senatorsDeferred, repsDeferred, bills, cosponsors).then(function(senatorsCallback, repsCallback, billsCallback, coCallback) {
 
             var senators = senatorsCallback[0];
             var reps = repsCallback[0];
