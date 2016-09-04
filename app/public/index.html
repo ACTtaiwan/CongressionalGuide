@@ -222,25 +222,47 @@
 			</div>
 		</div>
 	</div>
+
 		<div class="row">
+<!-- hide this until able to merge in Sunlight data
 		<% if (candidate.incumbent) {%>
-				<div id="supportedbill">
-		<h4 class ="font-weight-bold">Taiwan Bills Supported:<%=candidate.bills.length%></h4>
-			<table>
-			<%for(var i = 0; i < candidate.bills.length; ++i){%>
-			<tr>
-				<td><a href="<%=candidate.bills[i].url%>"><%=i+1%>. <%=candidate.bills[i].title%></a>
-				</td>
-			</tr>
-			<%}%>
-			</table>
-		</div>
+			<div id="supportedbill">
+				<h4 class ="font-weight-bold">Taiwan Bills Supported: 
+					<%=candidate.bills.length%></h4>
+				<table>
+					<%for(var i = 0; i < candidate.bills.length; ++i){%>
+					<tr>
+						<td><a href="<%=candidate.bills[i].url%>">
+							<%=i+1%>. <%=candidate.bills[i].title%></a>
+						</td>
+					</tr>
+					<%}%>
+				</table>
+			</div>
 		<% } %>
+ -->
+ 
 	<!-- TODO: Note display -->
 
 		<div id="questionnaire" class="questionnaire-box">
-					<h4 class ="font-weight-bold">Questionnaire</h4	>
-			<p>Ask the <font color="red">candidate</font> to answer the questionnaire on their support for Taiwan. <br><a href="http://www.americancitizensfortaiwan.org/congressional_candidate_questionnaire">See the questionnaire.</a></p>
+			<h4 class ="font-weight-bold">Taiwan Support Questionnaire</h4>
+			<%if(!candidate.questionnaire_response){%>
+				<%if(!(candidate.twitter) || (candidate.email)){%>
+				<p>Please go to the candidate's site <%if(candidate.facebook){%> or 
+					Facebook page <%}%>and contact them with this message: <br>
+					<i>Will you support our important trade and security ally Taiwan? Please answer the questions at http://ACTtaiwan.org/q</i><br><br>
+				<%}else{%>
+				<p>Ask this <font color="red">candidate</font> to answer the questionnaire 
+					on their support for Taiwan.<br>
+				<%}%>
+					<a href="http://www.americancitizensfortaiwan.org/congressional_candidate_questionnaire">
+					See the questionnaire.</a></p>
+			<%}else{%>
+			<p><a href="#answer" data-toggle="collapse">Click to see this candidates answers</a></p>
+			<div id="answer" class="collapse">
+			<%=candidate.questionnaire_response %>
+			</div>
+			<%}%>
 		<table class="questionnaire-table">
 			<tr>
 			<%if(!candidate.questionnaire_response){%>
@@ -253,12 +275,14 @@
 				<%}%>
 			<%}else{%>
 				<%if(candidate.twitter){%>
-				<td><a href="http://www.twitter.com/intent/tweet?screen_name=<%=candidate.twitter%>&text= Response: <%candidate.questionnaire_response%>" target="_blank"><img class="social-icon questionnaire-button" src="./img/colored/twitter.png">Share via Twitter</a></td>
+				<td><a href="http://www.twitter.com/intent/tweet?screen_name=<%=candidate.twitter%>&text=Thank you for answering the American Citizens for Taiwan questionnaire. http://voterguide.acttaiwan.org" target="_blank"><img class="social-icon questionnaire-button" src="./img/colored/twitter.png">Share via Twitter</a></td>
 				<%}%>
-				<%if(candidate.email){%>
-				<!--TODO: The share link need to be refined-->
-				<td><a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.americancitizensfortaiwan.org%2F&display=popup&ref=plugin&src=like&app_id=126739610711965" target="blank"><img class="social-icon questionnaire-button" src="./img/colored/facebook.png">Share via Facebook</a></td>
+<!-- 
+				<%if(candidate.facebook){%>
+				<!~~TODO: The share link need to be refined~~>
+				<td><a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fvoterguide.acttaiwan.org%2F&display=popup&ref=plugin&src=like&app_id=126739610711965" target="blank"><img class="social-icon questionnaire-button" src="./img/colored/facebook.png">Share via Facebook</a></td>
 				<%}%>
+ -->
 			<%}%>
 			</tr>
 		</table>
