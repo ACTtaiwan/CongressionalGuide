@@ -170,12 +170,12 @@
 	<% var candidate_tpl = _.template($("#candidate-tpl").html());%>
 	<% _.each(candidates, function(candidate) { %>
 		<% if(_.indexOf(candidates, candidate) % 2 === 0) { %>
-			<div class="row top-buffer" id="candidate row">
-				<div class="col-md-6">
+			<div class="row" id="candidate row">
+				<div class="col-md-6 top-buffer">
 					<%= candidate_tpl({candidate: candidate, role: "Incumbent"})%>
 				</div>
 		<% } else { %>
-				<div class="col-md-6">
+				<div class="col-md-6 top-buffer">
 					<%= candidate_tpl({candidate: candidate, role: "Challenger"})%>
 				</div>
 			</div>
@@ -189,12 +189,12 @@
 
 <script type="text/template" id="candidate-tpl">
 	<div class="row" id="photo info">
-		<div class="col-xs-6">
+		<div class="col-sm-6">
 			<% if(candidate.img_src === null) candidate.img_src = 
 				 "./img/default-img.png"%>
 			<img class="limit-h" src="<%=candidate.img_src%>"/>
 		</div>
-		<div class="col-xs-6">
+		<div class="col-sm-6">
 			<h4 class="text-danger"><%= candidate.incumbent ? 'Incumbent' : 'Challenger' %></h4>
 			<h4><%=candidate.firstName + ' ' + candidate.lastName%></h4>
 			<h4><%if(candidate.party === 'R'){%>
