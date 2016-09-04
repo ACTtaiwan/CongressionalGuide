@@ -7,7 +7,7 @@ var db = new sqlite3.Database('../db/db.sqlite3');
 router.get('/', function(req, res, next) {
   var candidates = [];
   var selectClauseGenElect = 'SELECT coalesce(max(gen_election_candidate), \'0\') AS generalElection FROM candidates';
-  var selectClause = 'SELECT img_src, bioguideId, firstName, lastName, party, chamber, state, district, incumbent, website, email, facebook, twitter, youtube FROM candidates';
+  var selectClause = 'SELECT img_src, bioguideId, firstName, lastName, party, chamber, state, district, incumbent, website, email, facebook, twitter, youtube, questionnaire_response FROM candidates';
 
   var whereClause = '';
   var params = {};
