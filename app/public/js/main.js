@@ -1,6 +1,3 @@
-var MY_APP_ID = '[apikey]';
-var REST_API_KEY = '[apikey]';
-
 var SUNLIGHT_APIKEY = '[apikey]';
 var SUNLIGHT_BILLS_URI = 'http://congress.api.sunlightfoundation.com/bills';
 
