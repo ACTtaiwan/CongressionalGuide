@@ -126,6 +126,8 @@ for human in congressman:
   for k,v in human.iteritems():
     mesg += '(k,v)=(' + k + ' ,' + str(v) + ')\n'
     if k == 'name':
+      lp = v.find('(') #handle name like 'Bill Otto (Missouri)'
+      v = v[:lp-1]
       firstName = v.split()[0],
       lastName = v.split()[-1], 
     elif k == 'party':
