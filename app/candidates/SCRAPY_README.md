@@ -12,14 +12,14 @@ Container info is on the Docker Hub for [aciobanu/scrapy](https://hub.docker.com
 ### General Usage
 For a list of scrapy commands, simply run:
 
-`$ docker run -v $(pwd):/runtime/app -e PYTHONDONTWRITEBYTECODE=1 aciobanu/scrapy`
+`$ docker run --rm -v $(pwd):/runtime/app -e PYTHONDONTWRITEBYTECODE=1 aciobanu/scrapy`
 
 Since the container doesn't provide any persistence, we can use the volumes (-v) directive to share the current folder with the container.
 
 The `-e` env variable tells Python not to create .pyc files.
 
 ## Getting Candidates Data
-To run any of these commands below (including the detailed steps) using the Scrapy container, place `$ docker run -v $(pwd):/runtime/app -e PYTHONDONTWRITEBYTECODE=1 aciobanu/scrapy` before it (w/o 'scrapy' again). For example `$ docker run -v $(pwd):/runtime/app -e PYTHONDONTWRITEBYTECODE=1 aciobanu/scrapy list` to list available spiders.
+To run any of these commands below (including the detailed steps) using the Scrapy container, place `$ docker run --rm -v $(pwd):/runtime/app -e PYTHONDONTWRITEBYTECODE=1 aciobanu/scrapy` before it (w/o 'scrapy' again). For example `$ docker run --rm -v $(pwd):/runtime/app -e PYTHONDONTWRITEBYTECODE=1 aciobanu/scrapy list` to list available spiders.
 
 - To run scrapy:
 `scrapy crawl <spider name>`
