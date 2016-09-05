@@ -105,19 +105,19 @@ class SenateSpider2(scrapy.Spider):
             break
 
         logging.debug('grab twitter...')
-        for l in response.xpath('//a[@class="external text" and contains(text() ,"Twitter")]/@href'):
+        for l in response.xpath('//a[@class="external text" and text()="Twitter"]/@href'):
             logging.info('Twitter Feed: %s', l.extract())
             item['twtr'] = l.extract()
             break
 
         logging.debug('grab facebook...')
-        for l in response.xpath('//a[@class="external text" and contains(text() ,"Facebook")]/@href'):
+        for l in response.xpath('//a[@class="external text" and text()="Facebook"]/@href'):
             logging.info('Facebook Page: %s', l.extract())
             item['fb'] = l.extract()
             break
 
         logging.debug('grab youtube...')
-        for y in response.xpath('//a[@class="external text" and contains(text() ,"Youtube")]/@href'):
+        for y in response.xpath('//a[@class="external text" and text()="Youtube"]/@href'):
             logging.info('Youtube: %s', y.extract())
             item['youtube'] = y.extract()
             break
