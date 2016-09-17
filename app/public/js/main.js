@@ -1,5 +1,5 @@
 var dotenv = require('dotenv').config();
-var SUNLIGHT_APIKEY = process.env.APIkey;
+var SUNLIGHT_APIKEY = process.env.SunlightAPIkey;
 var SUNLIGHT_BILLS_URI = 'http://congress.api.sunlightfoundation.com/bills';
 
 var incumbent_with_challenger_tpl = _.template($("#incumbent-with-challenger-tpl").html());

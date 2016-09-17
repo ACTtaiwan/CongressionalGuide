@@ -17,7 +17,7 @@ var CronJob = require('cron').CronJob;
 * storing APIkey in .env file
 * reference: https://github.com/motdotla/dotenv
 */
-var SUNLIGHT_APIKEY = process.env.APIkey; 
+var SUNLIGHT_APIKEY = process.env.SunlightAPIkey; 
 var LEGISTLATOR_URL = 'http://congress.api.sunlightfoundation.com/legislators';
 var BILL_URL = 'http://congress.api.sunlightfoundation.com/bills?fields=official_title,urls.congress,sponsor_id,cosponsor_ids';
 

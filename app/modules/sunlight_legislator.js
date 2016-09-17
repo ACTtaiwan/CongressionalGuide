@@ -9,7 +9,7 @@
 
 var dotenv = require('dotenv').config();
 var http = require('http');
-var SUNLIGHT_APIKEY = process.env.APIkey; 
+var SUNLIGHT_APIKEY = process.env.SunlightAPIkey; 
 // TODO: Support pagination. Due to constraints, currently only able to get in_office legislators because we are using single page view.
 var SUNLIGHT_LEGISLATORS_URI = 'http://congress.api.sunlightfoundation.com/legislators?per_page=all';
 
