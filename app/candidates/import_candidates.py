@@ -6,7 +6,10 @@ from collections import defaultdict
 #
 # This script moves candidate information from filename.json into the sqlite3 database
 #
-# CREATE TABLE candidates (firstName TEXT, lastName TEXT, prefix TEXT, suffix TEXT, party TEXT, chamber TEXT, state TEXT, district INTEGER, incumbent INTEGER, source TEXT, bioguideId TEXT, fecId TEXT, website TEXT, email TEXT, facebook TEXT, twitter TEXT, youtube TEXT, img_src TEXT, questionnaire_response TEXT, gen_election_candidate INTEGER);
+# !!! UPDATE HERE WHENEVER THE DATABASE TABLE SCHEMA CHANGE !!!
+#
+# The order matter when we want to insert the value, current schema:
+# CREATE TABLE candidates (firstName TEXT, lastName TEXT, prefix TEXT, suffix TEXT, party TEXT, chamber TEXT, state TEXT, district INTEGER, incumbent INTEGER, source TEXT, bioguideId TEXT PRIMARY KEY UNIQUE, fecId TEXT UNIQUE, website TEXT UNIQUE, email TEXT UNIQUE, facebook TEXT UNIQUE, twitter TEXT UNIQUE, youtube TEXT UNIQUE, img_src TEXT, questionnaire_response TEXT, gen_election_candidate INTEGER DEFAULT (0), duplicate INTEGER, candidate_url text);
 
 
 logging.basicConfig(stream=sys.stderr,level=logging.DEBUG)
@@ -95,9 +98,11 @@ congressman = json.load(open(jsonpath))
 # if exists, update_query
 # else insert_query
 
-update_query = 'UPDATE candidates SET img_src = ?, facebook = ?, twitter = ?, website = ?, youtube = ?, source = ?, gen_election_candidate = ?, incumbent = ?, district = ? where firstName like ? and lastName like ? and state = ?'
-#update_query = 'UPDATE candidates SET img_src = ?, facebook = ?, twitter = ?, website = ?, youtube = ?, source = ?, gen_election_candidate = ?, incumbent = ? where firstName like ? and lastName like ? and state = ? and district = ?'
-insert_query = 'INSERT INTO candidates VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
+update_query = 'UPDATE candidates SET candidate_url = ?, img_src = ?, facebook = ?, twitter = ?, website = ?, youtube = ?, source = ?, gen_election_candidate = ?, incumbent = ?, district = ? where firstName like ? and lastName like ? and state = ?'
+#update_query = 'UPDATE candidates SET candidate_url = ?, img_src = ?, facebook = ?, twitter = ?, website = ?, youtube = ?, source = ?, gen_election_candidate = ?, incumbent = ? where firstName like ? and lastName like ? and state = ? and district = ?'
+
+# !!! UPDATE HERE WHENEVER THE DATABASE TABLE SCHEMA CHANGE !!!
+insert_query = 'INSERT INTO candidates VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
 
 for human in congressman:
   firstName=(None,)
@@ -121,6 +126,8 @@ for human in congressman:
   questionnaire_response=(None,)
   #TODO: NH primary election 9/13, their candidate will have null value here
   gen_election_candidate=(None,)
+  candidate_url=(None,)
+  duplicate=(None,)
 
   mesg=''
   for k,v in human.iteritems():
@@ -155,13 +162,17 @@ for human in congressman:
       incumbent = v,
     elif k == 'gen_election_candidate':
       gen_election_candidate = v,
+    elif k == 'url':
+      candidate_url = v,
 
   logging.debug(mesg)
   match_firstName = '%'+firstName[0]+'%',
   match_lastName = '%'+lastName[0]+'%',
-  insert_values = (firstName + lastName + prefix + suffix + party + chamber + state + district + incumbent + bioguideId + fecId + source + website + email + facebook + twitter + youtube + img_src + questionnaire_response + gen_election_candidate)
-  update_values = (img_src + facebook + twitter + website + youtube + source + gen_election_candidate + incumbent + district + match_firstName + match_lastName + state)
-  #update_values = (img_src + facebook + twitter + website + youtube + source + gen_election_candidate + incumbent + match_firstName + match_lastName + state + district)
+
+# !!! UPDATE HERE WHENEVER THE DATABASE TABLE SCHEMA CHANGE !!!
+  insert_values = (firstName + lastName + prefix + suffix + party + chamber + state + district + incumbent + source + bioguideId + fecId + website + email + facebook + twitter + youtube + img_src + questionnaire_response + gen_election_candidate + duplicate + candidate_url)
+  update_values = (candidate_url + img_src + facebook + twitter + website + youtube + source + gen_election_candidate + incumbent + district + match_firstName + match_lastName + state)
+  #update_values = (candidate_url + img_src + facebook + twitter + website + youtube + source + gen_election_candidate + incumbent + match_firstName + match_lastName + state + district)
 
   # Match with existing Sunlight data: lastName, first word of firstName, state and district
   # no district for senate
