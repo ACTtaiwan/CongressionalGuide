@@ -1,6 +1,9 @@
 /*jshint esversion: 6 */
 'use strict';
 
+//require dotenv to store our project key-value in .env
+var dotenv = require('dotenv').config();
+
 var express = require('express');
 var http = require('http');
 var path = require('path');
@@ -10,7 +13,11 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var CronJob = require('cron').CronJob;
 
-var SUNLIGHT_APIKEY = '[apikey]';
+/*
+* storing APIkey in .env file
+* reference: https://github.com/motdotla/dotenv
+*/
+var SUNLIGHT_APIKEY = process.env.APIkey; 
 var LEGISTLATOR_URL = 'http://congress.api.sunlightfoundation.com/legislators';
 var BILL_URL = 'http://congress.api.sunlightfoundation.com/bills?fields=official_title,urls.congress,sponsor_id,cosponsor_ids';
 
@@ -21,7 +28,6 @@ var users = require('./routes/users');
 var candidates = require('./routes/candidates');
 var bills = require('./routes/bills');
 var sunlight_legislator = require('./modules/sunlight_legislator');
-
 
 var PORT = 8080;
 var app = express();
