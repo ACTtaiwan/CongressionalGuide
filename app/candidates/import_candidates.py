@@ -9,7 +9,7 @@ from collections import defaultdict
 # !!! UPDATE HERE WHENEVER THE DATABASE TABLE SCHEMA CHANGE !!!
 #
 # The order matter when we want to insert the value, current schema:
-# CREATE TABLE candidates (firstName TEXT, lastName TEXT, prefix TEXT, suffix TEXT, party TEXT, chamber TEXT, state TEXT, district INTEGER, incumbent INTEGER, source TEXT, bioguideId TEXT PRIMARY KEY UNIQUE, fecId TEXT UNIQUE, website TEXT UNIQUE, email TEXT UNIQUE, facebook TEXT UNIQUE, twitter TEXT UNIQUE, youtube TEXT UNIQUE, img_src TEXT, questionnaire_response TEXT, gen_election_candidate INTEGER DEFAULT (0), duplicate INTEGER, candidate_url text);
+# CREATE TABLE candidates (firstName TEXT, lastName TEXT, prefix TEXT, suffix TEXT, party TEXT, chamber TEXT, state TEXT, district INTEGER, incumbent INTEGER, source TEXT, bioguideId TEXT PRIMARY KEY UNIQUE, fecId TEXT UNIQUE, website TEXT, email TEXT UNIQUE, facebook TEXT UNIQUE, twitter TEXT UNIQUE, youtube TEXT UNIQUE, img_src TEXT, questionnaire_response TEXT, gen_election_candidate INTEGER DEFAULT (0), duplicate INTEGER, candidate_url TEXT UNIQUE);
 
 
 logging.basicConfig(stream=sys.stderr,level=logging.DEBUG)
