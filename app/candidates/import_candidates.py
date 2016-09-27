@@ -2,6 +2,7 @@
 import sqlite3, json, os
 import logging, sys
 from collections import defaultdict
+from nameparser import HumanName
 
 #
 # This script moves candidate information from filename.json into the sqlite3 database
@@ -133,10 +134,19 @@ for human in congressman:
   for k,v in human.iteritems():
     mesg += '(k,v)=(' + k + ' ,' + str(v) + ')\n'
     if k == 'name':
-      lp = v.find('(') #handle name like 'Bill Otto (Missouri)'
-      v = v[:lp-1]
-      firstName = v.split()[0],
-      lastName = v.split()[-1], 
+      v = v.replace('%27','\'') #clean up scraped single quote issue
+      if v.endswith(')'): #handle name like 'Bill Otto (Missouri)'
+      	lp = v.find('(')
+      	v = v[:lp-1]
+      v = v.replace('%22','\"') #change nickname parenthesis to quotes
+      fullName = HumanName(v)
+      prefix = fullName.title,
+      if len(fullName.first) < 3: # if only 1st initial, then need to include middle name
+      	firstName = fullName.first + ' ' + fullName.middle,
+      else:
+      	firstName = fullName.first,
+      lastName = fullName.last,
+      suffix = fullName.suffix, 
     elif k == 'party':
       party = v[0],
     elif k == 'dist':
