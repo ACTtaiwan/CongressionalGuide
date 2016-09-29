@@ -2,6 +2,7 @@
 import sqlite3, json, os
 import logging, sys
 from collections import defaultdict
+from nameparser import HumanName
 
 #
 # This script moves candidate information from filename.json into the sqlite3 database
@@ -98,7 +99,7 @@ congressman = json.load(open(jsonpath))
 # if exists, update_query
 # else insert_query
 
-update_query = 'UPDATE candidates SET candidate_url = ?, img_src = ?, facebook = ?, twitter = ?, website = ?, youtube = ?, source = ?, gen_election_candidate = ?, incumbent = ?, district = ? where firstName like ? and lastName like ? and state = ?'
+update_query = 'UPDATE candidates SET candidate_url = ?, img_src = ?, facebook = ?, twitter = ?, website = ?, youtube = ?, gen_election_candidate = ?, incumbent = ?, district = ? where firstName like ? and lastName like ? and state = ?'
 #update_query = 'UPDATE candidates SET candidate_url = ?, img_src = ?, facebook = ?, twitter = ?, website = ?, youtube = ?, source = ?, gen_election_candidate = ?, incumbent = ? where firstName like ? and lastName like ? and state = ? and district = ?'
 
 # !!! UPDATE HERE WHENEVER THE DATABASE TABLE SCHEMA CHANGE !!!
@@ -133,10 +134,19 @@ for human in congressman:
   for k,v in human.iteritems():
     mesg += '(k,v)=(' + k + ' ,' + str(v) + ')\n'
     if k == 'name':
-      lp = v.find('(') #handle name like 'Bill Otto (Missouri)'
-      v = v[:lp-1]
-      firstName = v.split()[0],
-      lastName = v.split()[-1], 
+      v = v.replace('%27','\'') #clean up scraped single quote issue
+      if v.endswith(')'): #handle name like 'Bill Otto (Missouri)'
+      	lp = v.find('(')
+      	v = v[:lp-1]
+      v = v.replace('%22','\"') #change nickname parenthesis to quotes
+      fullName = HumanName(v)
+      prefix = fullName.title,
+      if len(fullName.first) < 3: # if only 1st initial, then need to include middle name
+      	firstName = fullName.first + ' ' + fullName.middle,
+      else:
+      	firstName = fullName.first,
+      lastName = fullName.last,
+      suffix = fullName.suffix, 
     elif k == 'party':
       party = v[0],
     elif k == 'dist':
@@ -146,8 +156,7 @@ for human in congressman:
     elif k == 'camp':
       website = v,
     elif k == 'twtr':
-      tv = v[v.find('twitter.com')+len('twitter.com')+1:]
-      twitter = tv[:tv.find('/')].replace('@',''),
+      twitter = v[v.find('twitter.com')+len('twitter.com')+1:],
     elif k == 'fb':
       facebook = v,
     elif k == 'state':
@@ -171,7 +180,7 @@ for human in congressman:
 
 # !!! UPDATE HERE WHENEVER THE DATABASE TABLE SCHEMA CHANGE !!!
   insert_values = (firstName + lastName + prefix + suffix + party + chamber + state + district + incumbent + source + bioguideId + fecId + website + email + facebook + twitter + youtube + img_src + questionnaire_response + gen_election_candidate + duplicate + candidate_url)
-  update_values = (candidate_url + img_src + facebook + twitter + website + youtube + source + gen_election_candidate + incumbent + district + match_firstName + match_lastName + state)
+  update_values = (candidate_url + img_src + facebook + twitter + website + youtube + gen_election_candidate + incumbent + district + match_firstName + match_lastName + state)
   #update_values = (candidate_url + img_src + facebook + twitter + website + youtube + source + gen_election_candidate + incumbent + match_firstName + match_lastName + state + district)
 
   # Match with existing Sunlight data: lastName, first word of firstName, state and district
