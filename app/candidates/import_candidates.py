@@ -99,7 +99,7 @@ congressman = json.load(open(jsonpath))
 # if exists, update_query
 # else insert_query
 
-update_query = 'UPDATE candidates SET candidate_url = ?, img_src = ?, facebook = ?, twitter = ?, website = ?, youtube = ?, source = ?, gen_election_candidate = ?, incumbent = ?, district = ? where firstName like ? and lastName like ? and state = ?'
+update_query = 'UPDATE candidates SET candidate_url = ?, img_src = ?, facebook = ?, twitter = ?, website = ?, youtube = ?, gen_election_candidate = ?, incumbent = ?, district = ? where firstName like ? and lastName like ? and state = ?'
 #update_query = 'UPDATE candidates SET candidate_url = ?, img_src = ?, facebook = ?, twitter = ?, website = ?, youtube = ?, source = ?, gen_election_candidate = ?, incumbent = ? where firstName like ? and lastName like ? and state = ? and district = ?'
 
 # !!! UPDATE HERE WHENEVER THE DATABASE TABLE SCHEMA CHANGE !!!
@@ -156,8 +156,7 @@ for human in congressman:
     elif k == 'camp':
       website = v,
     elif k == 'twtr':
-      tv = v[v.find('twitter.com')+len('twitter.com')+1:]
-      twitter = tv[:tv.find('/')].replace('@',''),
+      twitter = v[v.find('twitter.com')+len('twitter.com')+1:],
     elif k == 'fb':
       facebook = v,
     elif k == 'state':
@@ -181,7 +180,7 @@ for human in congressman:
 
 # !!! UPDATE HERE WHENEVER THE DATABASE TABLE SCHEMA CHANGE !!!
   insert_values = (firstName + lastName + prefix + suffix + party + chamber + state + district + incumbent + source + bioguideId + fecId + website + email + facebook + twitter + youtube + img_src + questionnaire_response + gen_election_candidate + duplicate + candidate_url)
-  update_values = (candidate_url + img_src + facebook + twitter + website + youtube + source + gen_election_candidate + incumbent + district + match_firstName + match_lastName + state)
+  update_values = (candidate_url + img_src + facebook + twitter + website + youtube + gen_election_candidate + incumbent + district + match_firstName + match_lastName + state)
   #update_values = (candidate_url + img_src + facebook + twitter + website + youtube + source + gen_election_candidate + incumbent + match_firstName + match_lastName + state + district)
 
   # Match with existing Sunlight data: lastName, first word of firstName, state and district
