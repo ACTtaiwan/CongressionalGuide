@@ -41,4 +41,7 @@ Follow these steps to get candidate data and import to the DB.
 2. Get General Election House candidates: `scrapy crawl house-GeneralElectionCandidatesInfo -o genElect_house.json`  
 3. Import Senate candidates to the DB: `python import_candidates.py genElect_senate.json`  
 4. Import House candidates to the DB: `python import_candidates.py genElect_house.json`  
+5. Download the [CSV data from Sunlight](https://sunlightlabs.github.io/congress/#legislator-spreadsheet) of legislators which only changes once in a while. It's easier to match legislators from Sunlight to the scraped data since we only need to match incumbents.  
+6. Import the legislators.csv file to the SQLite DB with a table name of "legislators"  
+7. Run the SQL in the `congressional_guide_merge.sql` file to bring incumbents' _bioguideid_ to the candidates table (this _bioguideid_ is used to match incumbents to the bills).
 
