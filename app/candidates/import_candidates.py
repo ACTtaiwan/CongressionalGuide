@@ -10,7 +10,7 @@ from nameparser import HumanName
 # !!! UPDATE HERE WHENEVER THE DATABASE TABLE SCHEMA CHANGE !!!
 #
 # The order matter when we want to insert the value, current schema:
-# CREATE TABLE candidates (firstName TEXT, lastName TEXT, prefix TEXT, suffix TEXT, party TEXT, chamber TEXT, state TEXT, district INTEGER, incumbent INTEGER, source TEXT, bioguideId TEXT PRIMARY KEY UNIQUE, fecId TEXT UNIQUE, website TEXT, email TEXT UNIQUE, facebook TEXT UNIQUE, twitter TEXT UNIQUE, youtube TEXT UNIQUE, img_src TEXT, questionnaire_response TEXT, gen_election_candidate INTEGER DEFAULT (0), duplicate INTEGER, candidate_url TEXT UNIQUE);
+# CREATE TABLE candidates (firstName TEXT, lastName TEXT, prefix TEXT, suffix TEXT, party TEXT, chamber TEXT, state TEXT, district INTEGER, incumbent INTEGER, source TEXT, bioguideId TEXT PRIMARY KEY UNIQUE, fecId TEXT UNIQUE, website TEXT, email TEXT UNIQUE, facebook TEXT UNIQUE, twitter TEXT UNIQUE, youtube TEXT UNIQUE, img_src TEXT, questionnaire_response TEXT, gen_election_candidate INTEGER DEFAULT (0), duplicate INTEGER, candidate_url TEXT UNIQUE, comments TEXT);
 
 
 logging.basicConfig(stream=sys.stderr,level=logging.DEBUG)
@@ -103,7 +103,7 @@ update_query = 'UPDATE candidates SET candidate_url = ?, img_src = ?, facebook =
 #update_query = 'UPDATE candidates SET candidate_url = ?, img_src = ?, facebook = ?, twitter = ?, website = ?, youtube = ?, source = ?, gen_election_candidate = ?, incumbent = ? where firstName like ? and lastName like ? and state = ? and district = ?'
 
 # !!! UPDATE HERE WHENEVER THE DATABASE TABLE SCHEMA CHANGE !!!
-insert_query = 'INSERT INTO candidates VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
+insert_query = 'INSERT INTO candidates VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
 
 for human in congressman:
   firstName=(None,)
@@ -127,8 +127,9 @@ for human in congressman:
   questionnaire_response=(None,)
   #TODO: NH primary election 9/13, their candidate will have null value here
   gen_election_candidate=(None,)
-  candidate_url=(None,)
   duplicate=(None,)
+  candidate_url=(None,)
+  comments=(None,)
 
   mesg=''
   for k,v in human.iteritems():
@@ -179,7 +180,7 @@ for human in congressman:
   match_lastName = '%'+lastName[0]+'%',
 
 # !!! UPDATE HERE WHENEVER THE DATABASE TABLE SCHEMA CHANGE !!!
-  insert_values = (firstName + lastName + prefix + suffix + party + chamber + state + district + incumbent + source + bioguideId + fecId + website + email + facebook + twitter + youtube + img_src + questionnaire_response + gen_election_candidate + duplicate + candidate_url)
+  insert_values = (firstName + lastName + prefix + suffix + party + chamber + state + district + incumbent + source + bioguideId + fecId + website + email + facebook + twitter + youtube + img_src + questionnaire_response + gen_election_candidate + duplicate + candidate_url + comments)
   update_values = (candidate_url + img_src + facebook + twitter + website + youtube + gen_election_candidate + incumbent + district + match_firstName + match_lastName + state)
   #update_values = (candidate_url + img_src + facebook + twitter + website + youtube + source + gen_election_candidate + incumbent + match_firstName + match_lastName + state + district)
 

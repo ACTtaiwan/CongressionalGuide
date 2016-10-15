@@ -7,6 +7,7 @@ Api key - [apikey]
 
 Click on "/legislators/locate", enter your zip and try it!
 
+!!! PlEASE UPDATE /app/candidates/import_candidates.py WHENEVER THE DATABASE TABLE SCHEMA CHANGE !!!
 
 ## Table - legislators
 Sourced from functions that gather data from Sunlight (both congress and FEC candidate data) and Ballopedia via Scrapy.
