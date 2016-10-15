@@ -10,6 +10,8 @@ services:
     volumes:
     # mount the db volume for db.sqlite3  + JSON files
     - ./db:/opt/db
+    # Load .env file for the API keys
+    env_file: app/.env
   websql:
     # for direct access of db data (adding questionnaire answers or notes)
     build: ./phpLiteAdmin
