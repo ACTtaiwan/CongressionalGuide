@@ -1,6 +1,8 @@
 var dotenv = require('dotenv').config();
+// set API keys in ../.env
 var SUNLIGHT_APIKEY = process.env.SunlightAPIkey;
 var SUNLIGHT_BILLS_URI = 'http://congress.api.sunlightfoundation.com/bills';
+var GEOCODING_APIKEY = 	process.env.GeocodingAPIkey;
 
 var incumbent_with_challenger_tpl = _.template($("#incumbent-with-challenger-tpl").html());
 
@@ -8,7 +10,7 @@ function getLocation(zip, address) {
     var location = [];
     $.ajax('https://geoservices.tamu.edu/Services/Geocode/WebService/GeocoderWebServiceHttpNonParsed_V04_01.aspx', {
         data: {
-            apiKey: SUNLIGHT_APIKEY, //'[apikey]',
+            apiKey: GEOCODING_APIKEY,
             version: '4.01',
             zip: zip,
             streetAddress: address
