@@ -5,7 +5,7 @@ import requests
 
 logging.basicConfig(stream=sys.stderr,level=logging.DEBUG)
 
-URL = 'https://congress.api.sunlightfoundation.com/bills?apikey=d9eeb169a7224fe28ae0f32aca0dc93e&bill_id__in=sconres38-114%7Chconres88-114%7Cs2426-114%7Chr4154-114%7Chr1853-114%7Chconres76-114%7Cs1683-113%7Chres494-113%7Chjres109-113%7Csjres31-113%7Chconres55-113%7Chconres46-113%7Chr1151-113%7Cs579-113%7Chres185-113%7Chconres29-113%7Cs12-113%7Chr419-113&fields=official_title,urls.congress,sponsor_id,cosponsor_ids'
+URL = 'https://congress.api.sunlightfoundation.com/bills?apikey=' os.environ['SunlightAPIkey'] '&bill_id__in=sconres38-114%7Chconres88-114%7Cs2426-114%7Chr4154-114%7Chr1853-114%7Chconres76-114%7Cs1683-113%7Chres494-113%7Chjres109-113%7Csjres31-113%7Chconres55-113%7Chconres46-113%7Chr1151-113%7Cs579-113%7Chres185-113%7Chconres29-113%7Cs12-113%7Chr419-113&fields=official_title,urls.congress,sponsor_id,cosponsor_ids'
 
 dbpath = '/root/CongressionalGuide/db/db.sqlite3'
 if not (dbpath and os.path.isfile(dbpath)):
